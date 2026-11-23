@@ -23,11 +23,11 @@ Update the **Status** table and append to the **Update log** whenever new data l
 | WAR | 523 / 538 members; 2,965 / 2,972 CSV rows matched | Split Ticket CSV | 15 have no row (uncontested / same-party / delegates) |
 | Kamala 2-way | 107 statewide; **146 pending** (redrawn); **280 missing** | FEC (statewide); district file not yet supplied | Add `data/inputs/pres_2024_by_cd119.csv`; fill `kamala_new_districts.csv` |
 | Last 2-way | 300 / 538 | Wikipedia (provisional) | House results still being entered/certified; rerun, then swap to certified |
-| Fundraising | 6 / 538 | OpenFEC | Add `FEC_API_KEY` to `.env`, rerun 09 |
+| Fundraising | 36 / 538 | OpenFEC | Key allows 60 requests/hour: rerun 09 hourly (cached) until done |
 | Committees | 407 / 538 (119th) | congress-legislators | New members get assignments with the 120th (flip `COMMITTEE_CONGRESS`) |
 | First elected / years | 538 / 538 | Derived from terms + `first_elected.csv` | Done |
 | Caucuses | 297 / 538 members (11 caucuses) + independents' party caucus | Wikipedia caucus articles + congress-legislators | Main Street has no current list on Wikipedia; new members join in January |
-| 2026 targeting | 64 seats flipped · 86 race roles · 97 members on a committee list · 163 with issue PAC backing (33 Red to Blue) | `data/targeting_2026/` (team-compiled) + Wikipedia gain/hold | Issue PAC gaps: see `data/targeting_2026/README.md` |
+| 2026 targeting | 64 seats flipped · 86 race roles · 97 members on a committee list · 233 with issue PAC backing (33 Red to Blue) | `data/targeting_2026/` (team-compiled) + Wikipedia gain/hold | Issue PAC gaps: see `data/targeting_2026/README.md` |
 | Fun facts | 0 | `fun_facts.yaml` (hand-written) | Write them |
 
 ---
@@ -226,7 +226,9 @@ Similar technical changes in IL, MO, and SC (≤ 225 people) are already treated
 - **LCV Action Fund (`12a`):** lcv.org/2025-2026-endorsements/. **140 endorsements** (125 House, 15 Senate), of whom 128 are seated members. The page serves the same full list regardless of `?result_page`, so the README's "192" couldn't be reproduced; it may count something else. Worth a manual look.
 - **FEC Schedule E (`12b`):** every 2026 independent expenditure by Fairshake / Protect Progress / Defend American Jobs, United Democracy Project, Leading the Future / Think Big / American Mission, Club for Growth Action, LCV Victory Fund, and Women Vote!. It pages through `/schedules/schedule_e/`, sums per candidate and support/oppose, and skips memo lines.
   - **Only support counts toward "Backed by"**; spending *against* someone is listed in the report.
-  - **Status: Fairshake's own committee only** (6 supported at about $1M each, 3 opposed). The rest needs `FEC_API_KEY` in `.env`, since the public DEMO_KEY is about 10 requests an hour. Rerun `12b`, then `12` and `99`.
+  - **Status: complete for all 10 committees** (283 candidate rows: 197 support, 86 oppose). Each committee name resolved to the right FEC super PAC (type O), and look-alikes such as "Think Big America PAC" and "Women Vote Smart" were rejected.
+    - Leading the Future's own committee has no IEs; it spends through Think Big and American Mission.
+    - The key comes from `FEC_API_KEY` in the environment (it's set in `~/.Renviron`, outside the repo). That key's limit is **60 requests/hour**.
   - If a committee name search picks the wrong FEC committee, pin its ID in `data/overrides/fec_committees.csv`.
 - **Still manual:** a newer NRCC Patriot Program roster, and the rest of EMILYs List / New Dem / Blue Dog (see the targeting README).
 
@@ -277,6 +279,7 @@ Inputs you supply go in `data/inputs/` (`pres_2024_by_cd119.csv`).
 
 Append newest first: date, what changed, and why.
 
+- **2026-11-23**: FEC Schedule E pulled for all 10 committees (283 rows); issue PAC backing now 233 members. Fundraising 36/538 (key limited to 60 req/hour).
 - **2026-11-23**: Filled targeting gaps: LCV Action Fund scrape (12a, 140 endorsements), FEC Schedule E step (12b; Fairshake committee done, rest awaits FEC_API_KEY). Issue PAC backing now covers 163 members.
 - **2026-11-23**: Added the team's 2026 targeting lists (new step 12): seatFlipped (64), raceRole (86), committee lists, issue PAC backing (50). Red to Blue now comes from these lists (33 members); the earlier dccc.org scrape (step 11) was retired.
 - **2026-11-22**: Added caucus memberships (new step 10) and the last race's opponent and party (08).

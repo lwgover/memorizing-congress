@@ -1,6 +1,6 @@
 # members.json build
 
-_Generated 2026-11-23T17:02:51Z_
+_Generated 2026-11-23T17:50:11Z_
 
 ## Errors (0)
 
@@ -18,8 +18,8 @@ _none_
 - redToBlue: 33
 - seatFlipped: 64
 - raceRole: 86
-- issuePacSupport: 163
-- fundraising: 6
+- issuePacSupport: 233
+- fundraising: 36
 - committees: 407
 - funFacts: 0
 - provisionalIds: 118
