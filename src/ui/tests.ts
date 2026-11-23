@@ -18,6 +18,8 @@ import { playfield } from "./playfield";
 
 type Mode = "n2d" | "d2n";
 type Format = "quick" | "state" | "sweep" | "sprint";
+type Who = "all" | "senate" | "house";
+const WHO_LABEL: Record<Who, string> = { all: "Everyone", senate: "Senators", house: "House" };
 const FORMAT_LABEL: Record<Format, string> = { quick: "Quick 10", state: "Single state", sweep: "Full sweep", sprint: "60-second sprint" };
 
 export function testView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) {
@@ -26,6 +28,7 @@ export function testView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) {
   let format: Format = "quick";
   let answerMode: "type" | "map" | "normal" | "hard" = mode === "n2d" ? "type" : "normal";
   let state = "TX";
+  let who: Who = (["senate", "house"] as const).find((w) => w === params.get("who")) ?? "all";
 
   const setup = h("section.stack", { style: "gap:18px" });
   let stopQuiz: (() => void) | undefined;
@@ -47,6 +50,8 @@ export function testView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) {
       h("div.panel.stack", { style: "gap:16px" },
         h("div.stack", { style: "gap:6px" }, h("span.eyebrow", "Test"),
           seg<Mode>([["n2d", "Name → District"], ["d2n", "District → Name"]], mode, (v) => { mode = v; answerMode = v === "n2d" ? "type" : "normal"; })),
+        h("div.stack", { style: "gap:6px" }, h("span.eyebrow", "Members"),
+          seg<Who>([["all", "Everyone"], ["senate", "Senators only"], ["house", "House only"]], who, (v) => { who = v; })),
         h("div.stack", { style: "gap:6px" }, h("span.eyebrow", "Format"),
           seg<Format>([["quick", "Quick 10"], ["state", "Single state"], ["sweep", "Full sweep"], ["sprint", "60-second sprint"]], format, (v) => { format = v; })),
         format === "state" ? h("div.stack", { style: "gap:6px" }, h("label.eyebrow", { for: "test-state" }, "State"), select) : null,
@@ -54,6 +59,7 @@ export function testView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) {
           mode === "n2d"
             ? seg([["type", "Typing (TX-35)"], ["map", "Clicking the map"]] as ["type" | "map", string][], answerMode as "type" | "map", (v) => { answerMode = v; })
             : seg([["normal", "Normal"], ["hard", "Hard: shape only, no hints"]] as ["normal" | "hard", string][], answerMode as "normal" | "hard", (v) => { answerMode = v; })),
+        who === "senate" ? h("p.muted.small", "Senators: name a state and a class, or the senator for a state and class. At the end you get a map of which senators you know, state by state.") : null,
         h("p.muted.small", mode === "n2d"
           ? "Exact district = 100. Right state, wrong district = 40 (in map mode, scored by distance like District Tap). Senators: right state, wrong class = 60."
           : "Exact = 100. Last name alone is fine. Naming someone else from the same delegation logs a mix-up."),
@@ -64,20 +70,23 @@ export function testView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) {
   function start() {
     const r = rng(`test-${Date.now()}`);
     let pool = ctx.data.members;
+    if (who !== "all") pool = pool.filter((m) => m.chamber === who);
     if (format === "state") pool = pool.filter((m) => m.state === state);
+    if (!pool.length) { renderSetup(); setup.append(h("p.muted", "No members match. Pick a different state or members.")); return; }
     const qs = shuffle(pool, r);
     const list = format === "quick" ? qs.slice(0, 10) : qs;
     setup.remove();
-    stopQuiz = runQuiz(root, ctx, { mode, format, answerMode, members: list, stateName: ctx.data.stateNames.get(state) ?? state });
+    stopQuiz = runQuiz(root, ctx, { mode, format, answerMode, who, members: list, stateName: ctx.data.stateNames.get(state) ?? state });
   }
   return () => stopQuiz?.();
 }
 
-interface QuizOpts { mode: Mode; format: Format; answerMode: string; members: Member[]; stateName: string }
+interface QuizOpts { mode: Mode; format: Format; answerMode: string; who: Who; members: Member[]; stateName: string }
 
 function runQuiz(root: HTMLElement, ctx: Ctx, o: QuizOpts) {
   const { data, matcher } = ctx;
   const scores: number[] = [];
+  const asked: Member[] = []; // asked[k] goes with scores[k]
   let i = 0;
   let deadline = o.format === "sprint" ? Date.now() + 60000 : 0;
   let timer = 0;
@@ -103,7 +112,7 @@ function runQuiz(root: HTMLElement, ctx: Ctx, o: QuizOpts) {
     const total = o.format === "sprint" ? "" : ` of ${o.members.length}`;
     const left = deadline ? ` · ${Math.max(0, Math.ceil((deadline - Date.now()) / 1000))}s left` : "";
     head.replaceChildren(
-      h("h2", `${o.mode === "n2d" ? "Name → District" : "District → Name"} · ${o.format === "state" ? o.stateName : FORMAT_LABEL[o.format]}`),
+      h("h2", `${o.mode === "n2d" ? "Name → District" : "District → Name"}${o.who !== "all" ? ` · ${WHO_LABEL[o.who]}` : ""} · ${o.format === "state" ? o.stateName : FORMAT_LABEL[o.format]}`),
       h("span.muted.num", `Question ${i + 1}${total} · ${scores.reduce((a, b) => a + b, 0)} pts${left}`));
     if (pf) {
       pf.score.replaceChildren(
@@ -240,6 +249,7 @@ function runQuiz(root: HTMLElement, ctx: Ctx, o: QuizOpts) {
   function reveal(m: Member, score: number, given: string, viaMap = false) {
     if (answered) return;
     answered = true;
+    asked.push(m);
     body.querySelectorAll<HTMLInputElement | HTMLButtonElement>("input, .seg button, .stack > .row button").forEach((el) => { el.disabled = true; });
     scores.push(score);
     renderHead();
@@ -285,7 +295,7 @@ function runQuiz(root: HTMLElement, ctx: Ctx, o: QuizOpts) {
     const max = scores.length * 100;
     const correct = scores.filter((s) => s >= 100).length;
     update((s) => { s.tests.push({ date: today(), mode: o.mode, format: o.format, score: total, max }); });
-    const title = `${o.mode === "n2d" ? "Name → District" : "District → Name"} · ${o.format === "state" ? o.stateName : FORMAT_LABEL[o.format]}`;
+    const title = `${o.mode === "n2d" ? "Name → District" : "District → Name"}${o.who !== "all" ? ` · ${WHO_LABEL[o.who]}` : ""} · ${o.format === "state" ? o.stateName : FORMAT_LABEL[o.format]}`;
     const emoji = o.format === "sprint" ? `${correct} correct in 60 seconds` : squares(scores.slice(0, 50));
     const text = shareText(title, emoji, `${total}/${max}`, "test");
     head.replaceChildren(h("h2", "Results"));
@@ -295,7 +305,45 @@ function runQuiz(root: HTMLElement, ctx: Ctx, o: QuizOpts) {
       h("pre.share", text),
       h("div.row",
         h("button.btn", { type: "button", onclick: () => shareResult(text) }, "Share result"),
-        h("a.btn.line", { href: `#/test?mode=${o.mode}&t=${Date.now()}` }, "New test"))));
+        h("a.btn.line", { href: `#/test?mode=${o.mode}${o.who !== "all" ? `&who=${o.who}` : ""}&t=${Date.now()}` }, "New test"))));
+    if (o.who === "senate" && asked.length) body.append(senateScorecard());
+  }
+
+  /** Which senators you know: a state map (2, 1 or 0 of 2 right), plus who you missed. */
+  function senateScorecard(): HTMLElement {
+    const last = new Map<string, { m: Member; ok: boolean }>(); // latest answer per senator
+    asked.forEach((m, k) => last.set(m.id, { m, ok: scores[k] >= 100 }));
+    const byState = new Map<string, { right: number; asked: number }>();
+    for (const { m, ok } of last.values()) {
+      const r = byState.get(m.state) ?? { right: 0, asked: 0 };
+      r.asked++;
+      if (ok) r.right++;
+      byState.set(m.state, r);
+    }
+    const map = new UsMap(data, { showDistricts: false, label: "Senators you know, by state" });
+    map.fill((st) => {
+      const r = byState.get(st);
+      if (!r) return null;
+      return r.right === r.asked ? "var(--m4)" : r.right > 0 ? "var(--m2)" : "var(--soft)";
+    });
+    const missed = [...last.values()].filter((x) => !x.ok).map((x) => x.m)
+      .sort((a, b) => a.state.localeCompare(b.state) || a.senateClass! - b.senateClass!);
+    const known = [...last.values()].filter((x) => x.ok).length;
+    const full = [...byState.values()].filter((r) => r.right === r.asked && r.asked === 2).length;
+    const sw = (c: string, label: string) => h("span.row", { style: "gap:6px" }, h("span.sw", { style: `background:${c}` }), label);
+    return h("div.panel.stack", { style: "gap:14px" },
+      h("div.sec-head", h("h3", "Senators you know"), h("span.muted.small.num", `${known} of ${last.size} · both senators in ${full} state${full === 1 ? "" : "s"}`)),
+      map.el,
+      h("div.scale", sw("var(--m4)", "All asked right"), sw("var(--m2)", "One of two"), sw("var(--soft)", "Missed"), sw("var(--map-land)", "Not asked")),
+      missed.length
+        ? h("div.stack", { style: "gap:8px" },
+            h("span.eyebrow", `Missed (${missed.length})`),
+            h("div.chips", ...missed.map((m) => h("span", { title: seatLabel(m) }, `${m.name} · ${seatLabel(m)}`))),
+            h("div.row", h("button.btn", { type: "button", onclick: () => {
+              root.replaceChildren();
+              runQuiz(root, ctx, { ...o, format: "sweep", members: shuffle(missed, rng(`retry-${Date.now()}`)) });
+            } }, `Retry the ${missed.length} I missed`)))
+        : h("p.muted", "You got every senator you were asked. Try the full sweep of all 100."));
   }
 
   return () => { if (timer) clearInterval(timer); };

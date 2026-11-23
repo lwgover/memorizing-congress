@@ -105,7 +105,8 @@ export function todayView(root: HTMLElement, { data }: Ctx) {
         h("p.muted.small", `${forecast[0]} due today · ${forecast.slice(1, 8).reduce((x, y) => x + y, 0)} over the next week`)),
       h("div.panel", h("span.eyebrow", "Tests"),
         h("p.small.muted", "Quick 10, a single state, the full sweep of all members, or a 60-second sprint."),
-        h("div.row", h("a.btn.line.sm", { href: "#/test?mode=n2d" }, "Name → District"), h("a.btn.line.sm", { href: "#/test?mode=d2n" }, "District → Name")))),
+        h("div.row", h("a.btn.line.sm", { href: "#/test?mode=n2d" }, "Name → District"), h("a.btn.line.sm", { href: "#/test?mode=d2n" }, "District → Name"),
+          h("a.btn.line.sm", { href: "#/test?mode=d2n&who=senate" }, "Senators")))),
   );
 
   /** New members paused until the state you just finished sticks. */
