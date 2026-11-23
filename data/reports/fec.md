@@ -1,12 +1,12 @@
 # FEC 2026 fundraising
 
-_Generated 2026-11-23T17:49:50Z_
+_Generated 2026-11-23T17:55:23Z_
 
 ## No FEC candidate found (0)
 
 _none_
 
-## Search-based IDs (verify) (7)
+## Search-based IDs (verify) (19)
 
 - AZ-01 Amish Shah: ['H4AZ01194']
 - AZ-05 Mark Lamb: ['H6AZ05265']
@@ -15,6 +15,18 @@ _none_
 - CA-04 Eric Jones: ['H6CA04222']
 - CA-06 Richard Pan: ['H6CA03158']
 - CA-11 Scott Wiener: ['H8CA11116']
+- CA-22 Randy Villegas: ['H6CA22190']
+- CA-26 Jacqui Irwin: ['H6CA26266']
+- CA-34 Angela Gonzales-Torres: ['H6CA34286']
+- CA-48 Marni von Wilpert: ['H6CA48310']
+- CO-01 Melat Kiros: ['H6CO01273']
+- CO-04 Eileen Laubacher: ['H6CO04202']
+- CO-05 Jessica Killin: ['H6CO05324']
+- CO-08 Manny Rutinel: ['H6CO08013']
+- CT-01 Luke Bronin: ['H6CT01206']
+- DC-AL Robert White: ['H6DC01079']
+- FL-02 Austin Rogers: ['H6FL02331']
+- FL-07 Ryan Elijah: ['H6FL07231']
 
 ## No 2026 totals (0)
 
@@ -22,4 +34,4 @@ _none_
 
 ## Status (1)
 
-- 36/538 members with totals (stopped early: rate limit)
+- 96/538 members with totals (stopped early: rate limit)

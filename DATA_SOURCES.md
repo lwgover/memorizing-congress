@@ -49,6 +49,7 @@ Update the **Status** table and append to the **Update log** whenever new data l
 | 12a | `12a_fetch_lcv.py` | `data/targeting_2026/generated/lcv_action_fund.csv` |
 | 12b | `12b_fetch_schedule_e.py` | `data/targeting_2026/generated/fec_schedule_e.csv` (needs `FEC_API_KEY`) |
 | 12 | `12_targeting.py` | `data/interim/targeting.csv`, `reports/targeting.md` |
+| 13 | `13_fetch_logos.py` | `public/logos/*`, `public/data/logos.json`, `reports/logos.md` |
 | 99 | `99_build_members_json.py` | `public/data/{members,committees,pending_seats,meta}.json`, `reports/members.md` |
 
 Settings live in `scripts/config.py` (`COMMITTEE_CONGRESS`, `COUNT_COURT_MAPS`, simplification tolerance, city counts, and so on).
@@ -220,6 +221,12 @@ Similar technical changes in IL, MO, and SC (≤ 225 people) are already treated
 
 **On the site:** a "2026 race" block on the answer card and in the mastery map panel (role, a "Flipped to …" badge, list chips, "Backed by: …"), a "Red to Blue '26" chip, and a Tier 3 "2026 race" quiz card.
 
+**Logos (`13_fetch_logos.py`):** each group's own site icon, fetched from its official domain (largest `apple-touch-icon`/`icon` link, else `/favicon.ico`). They're saved in `public/logos/` so the site never hotlinks, and shown at 16px beside the group's name in the list and "Backed by" chips.
+- Used only to identify the group. These are the groups' trademarks, and nothing suggests they endorse this site.
+- All 10 groups resolved. United Democracy Project's homepage blocks scripts, but its favicon downloaded from its own domain.
+- To set or replace a logo, put a file at `data/overrides/logos/<slug>.png` (slugs are in `reports/logos.md`).
+- The SVG logos were checked for scripts (there were none). Browsers don't run scripts in `<img>` SVGs anyway.
+
 **No race ratings or PVI:** nothing from Cook, Sabato or Inside Elections is used.
 
 **Filling the README's gaps** (pipeline-generated files in `data/targeting_2026/generated/`, same columns as the team's CSVs; the team's files are never edited):
@@ -279,6 +286,7 @@ Inputs you supply go in `data/inputs/` (`pres_2024_by_cd119.csv`).
 
 Append newest first: date, what changed, and why.
 
+- **2026-11-23**: Added endorser logos (step 13) to list and "Backed by" chips.
 - **2026-11-23**: FEC Schedule E pulled for all 10 committees (283 rows); issue PAC backing now 233 members. Fundraising 36/538 (key limited to 60 req/hour).
 - **2026-11-23**: Filled targeting gaps: LCV Action Fund scrape (12a, 140 endorsements), FEC Schedule E step (12b; Fairshake committee done, rest awaits FEC_API_KEY). Issue PAC backing now covers 163 members.
 - **2026-11-23**: Added the team's 2026 targeting lists (new step 12): seatFlipped (64), raceRole (86), committee lists, issue PAC backing (50). Red to Blue now comes from these lists (33 members); the earlier dccc.org scrape (step 11) was retired.

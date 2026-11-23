@@ -19,5 +19,6 @@ uv run scripts/10_fetch_caucuses.py $F
 uv run scripts/12a_fetch_lcv.py $F
 uv run scripts/12b_fetch_schedule_e.py || echo "12b: Schedule E incomplete (needs FEC_API_KEY)"
 uv run scripts/12_targeting.py
+uv run scripts/13_fetch_logos.py $F
 uv run scripts/99_build_members_json.py
 echo "Done. Reports in data/reports/."

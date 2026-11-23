@@ -1,7 +1,7 @@
 /** Shared UI pieces: party chip, photo, sparkline, mini district maps, the reveal card. */
 import { geoConicEqualArea, geoPath, geoCentroid, type GeoPermissibleObjects } from "d3-geo";
 import type { AppData } from "../data/load";
-import { assetUrl, seatId, seatLabel } from "../data/load";
+import { assetUrl, logoFor, seatId, seatLabel } from "../data/load";
 import type { Member, Party, WarPoint } from "../data/types";
 import { getState, update } from "../store";
 import { fmtMoney, fmtPct, h, initials, s } from "./dom";
@@ -34,9 +34,17 @@ const PROGRAM_LABEL: Record<string, string> = {
   "NRCC|MAGA Majority": "NRCC MAGA Majority", "NRCC|Patriot Program": "NRCC Patriot Program", "NRCC|Target list": "NRCC target list",
 };
 
+/** A group's name with its logo (if we have one), for list and "Backed by" chips. */
+export function orgChip(group: string, label: string = group): HTMLElement {
+  const src = logoFor(group);
+  return h("span.org", { title: label },
+    src ? h("img", { src, alt: "", width: 16, height: 16, loading: "lazy" }) : null,
+    label);
+}
+
 /** "2026 race": how they won (raceRole), whether the seat flipped, which lists targeted it, PAC backing. */
 export function raceSection(m: Member): HTMLElement | null {
-  const lists = (m.targeting ?? []).map((t) => PROGRAM_LABEL[`${t.committee}|${t.program}`] ?? `${t.committee} ${t.program}`);
+  const lists = (m.targeting ?? []).map((t) => ({ group: t.committee, label: PROGRAM_LABEL[`${t.committee}|${t.program}`] ?? `${t.committee} ${t.program}` }));
   const pacs = m.issuePacSupport ?? [];
   if (!m.raceRole && !m.seatFlipped && !lists.length && !pacs.length) return null;
   const flip = m.seatFlipped
@@ -45,8 +53,8 @@ export function raceSection(m: Member): HTMLElement | null {
   return h("div.stack", { style: "gap:8px" },
     h("div.eyebrow", "2026 race"),
     m.raceRole || flip ? h("div.row", { style: "gap:8px" }, m.raceRole ? h("b", m.raceRole) : null, flip) : null,
-    lists.length ? h("div.chips", ...lists.map((l) => h("span.caucus", l))) : null,
-    pacs.length ? h("p.small", h("span.muted", "Backed by: "), pacs.join(", ")) : null);
+    lists.length ? h("div.chips", ...lists.map((l) => orgChip(l.group, l.label))) : null,
+    pacs.length ? h("div.stack", { style: "gap:6px" }, h("span.small.muted", "Backed by"), h("div.chips", ...pacs.map((p) => orgChip(p)))) : null);
 }
 
 /** Flag for members the DCCC put on its Red to Blue list (top challengers in GOP-held seats). */

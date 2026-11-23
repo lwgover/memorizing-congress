@@ -30,6 +30,12 @@ async function getJson<T>(path: string): Promise<T> {
   return r.json() as Promise<T>;
 }
 
+/** Endorsing group name -> logo path (from public/data/logos.json). Filled by loadData. */
+let logos: Record<string, string> = {};
+export function logoFor(group: string): string | null {
+  return logos[group] ? assetUrl(logos[group]) : null;
+}
+
 export function assetUrl(path: string): string {
   return `${base}${path}`;
 }
@@ -54,6 +60,7 @@ export async function loadData(): Promise<AppData> {
     getJson<any>("data/states.topo.json"),
     getJson<PendingSeat[]>("data/pending_seats.json").catch(() => [] as PendingSeat[]),
   ]);
+  logos = await getJson<Record<string, string>>("data/logos.json").catch(() => ({}));
   const districts = (feature(dTopo, dTopo.objects.districts) as unknown as FeatureCollection<Geometry, DistrictProps>).features.map(rewind);
   const states = (feature(sTopo, sTopo.objects.states) as unknown as FeatureCollection<Geometry, StateProps>).features.map(rewind);
 
