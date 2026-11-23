@@ -12,7 +12,7 @@ import { UsMap } from "../map/usMap";
 import { recordConfusion, topConfusions } from "../srs/confusions";
 import { today, update } from "../store";
 import { PARTY_VAR, districtMini, partyChip, photo, promptMap, promptName, roleChip } from "./components";
-import { h } from "./dom";
+import { h, toTop } from "./dom";
 import { answerInput, skipButton } from "./answer";
 import { playfield } from "./playfield";
 
@@ -118,6 +118,7 @@ function runQuiz(root: HTMLElement, ctx: Ctx, o: QuizOpts) {
 
   function ask() {
     answered = false;
+    if (!pf) toTop(); // map mode keeps its full-screen layout in place
     renderHead();
     const m = current();
     if (o.mode === "n2d") askN2D(m);

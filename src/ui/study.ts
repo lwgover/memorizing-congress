@@ -12,7 +12,7 @@ import { previews, Rating, review, type Grade } from "../srs/scheduler";
 import { getState, todayLog, update } from "../store";
 import { refreshStreak } from "./chrome";
 import { PARTY_NAME, fmtWar, photo, promptMap, promptName, revealCard, roleChip, sparkline, warRace } from "./components";
-import { fmtMoney, h } from "./dom";
+import { fmtMoney, h, toTop } from "./dom";
 import { answerInput, skipButton } from "./answer";
 
 interface Outcome { correct: boolean; score?: number; partial?: boolean; given?: string; answerText: string; suggest: Grade }
@@ -70,6 +70,7 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
 
   function nextCard() {
     keyHandler = null;
+    toTop(); // new person: start at the top so the prompt is in view
     const id = queue.shift();
     if (!id) return finish();
     const { memberId, type } = parseCardId(id);
@@ -97,7 +98,7 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
       revealCard(data, m),
       h("div.row", btn, h("span.kbd", "Enter")));
     keyHandler = (e) => { if (e.key === "Enter" && !(e.target instanceof HTMLTextAreaElement)) { e.preventDefault(); nextCard(); } };
-    btn.focus();
+    btn.focus({ preventScroll: true });
   }
 
   // ------------------------------------------------------------------ cards
@@ -156,10 +157,6 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
         break;
       case "name->district":
         view = h("div.stack", { style: "max-width:520px" }, nameTitle(m.chamber === "senate" ? "Which state?" : "Which district?"), seatInput((v) => checkSeat(v)));
-        break;
-      case "shape->district":
-        view = h("div.grid-2", promptMap(data, m, { silhouette: true }),
-          h("div.stack", h("span.eyebrow", "Which district is this shape?"), h("div", roleChip(m)), seatInput((v) => checkSeat(v))));
         break;
       case "senator->class":
         view = h("div.stack", nameTitle("Which Senate class?"),
@@ -247,7 +244,7 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
         return nextCard();
     }
     stage.replaceChildren(view);
-    view.querySelector<HTMLInputElement>("input")?.focus();
+    view.querySelector<HTMLInputElement>("input")?.focus({ preventScroll: true });
 
     function numeric(fact: NumericFact, guess: number, actual: number, fmt: (x: number) => string) {
       finishScore(closeness(fact, guess, actual), fmt(actual), fmt(guess));

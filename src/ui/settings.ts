@@ -78,7 +78,7 @@ export function settingsView(root: HTMLElement, { data }: Ctx) {
     h("div.panel.stack",
       h("h3", "Pace"),
       h("label.row", { for: "new-per-day" }, pace, h("span.muted", "new members per day")),
-      h("p.muted.small", "Members are introduced one state delegation at a time, in a fixed route around the map. Faces, party and shapes unlock for a member once you know their district well."),
+      h("p.muted.small", "Members are introduced one state delegation at a time, in a fixed route around the map. Faces and party unlock for a member once you know their district well."),
       h("label.row", { for: "hold-after-state", style: "gap:8px;align-items:flex-start" }, hold,
         h("span", h("b", "Lock in each state before starting the next. "),
           h("span.muted", "New members never cross into a new state on the same day, and after you finish a state they wait until every core card for it would be remembered for 3+ days. Study → Drill a state lets you practice it any time.")))),

@@ -70,7 +70,7 @@ export function sparkline(war: WarPoint[], party: Party, w = 120, hgt = 36, scal
 
 /**
  * A state's districts on their own projection. highlight = district id (or state id for senators).
- * silhouette = draw only the highlighted shape, no context (for shape->district cards).
+ * silhouette = draw only the highlighted shape, no context (District -> Name hard mode).
  */
 export function districtMini(data: AppData, state: string, opts: { highlight?: string | null; color?: string; silhouette?: boolean; size?: number } = {}): SVGElement {
   const size = opts.size ?? 340;

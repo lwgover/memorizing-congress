@@ -38,6 +38,11 @@ export function clear(el: Element): void {
   while (el.firstChild) el.firstChild.remove();
 }
 
+/** Jump back to the top for a new card/question (the previous answer card can be long). */
+export function toTop(): void {
+  window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+}
+
 let toastTimer: number | undefined;
 export function toast(msg: string): void {
   document.querySelector(".toast")?.remove();

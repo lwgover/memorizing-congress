@@ -10,7 +10,7 @@ import { isDue, newCard, type StoredCard } from "./scheduler";
 
 export type CardType =
   | "district->name" | "name->district" | "senator->class"
-  | "face->name" | "name->face" | "name->party" | "shape->district"
+  | "face->name" | "name->face" | "name->party"
   | "war" | "war-trajectory" | "kamala-2way" | "last-2way" | "first-elected" | "fundraising" | "committees";
 
 export const TIER3_FACTS: { type: CardType; label: string }[] = [
@@ -30,7 +30,6 @@ export const CARD_LABEL: Record<CardType, string> = {
   "face->name": "Face to name",
   "name->face": "Name to face",
   "name->party": "Party",
-  "shape->district": "Shape to district",
   "war": "WAR",
   "war-trajectory": "WAR trajectory",
   "kamala-2way": "Harris 2-way",
@@ -58,9 +57,6 @@ export function tier2Types(m: Member, data: AppData): CardType[] {
   if (m.photo) {
     t.push("face->name");
     if (data.members.filter((x) => x.photo).length >= 4) t.push("name->face");
-  }
-  if (m.chamber === "house") {
-    t.push("shape->district");
   }
   return t;
 }
