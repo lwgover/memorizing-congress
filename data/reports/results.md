@@ -1,0 +1,532 @@
+# Election results join
+
+_Generated 2026-11-23T04:45:30Z_
+
+## last2Way not found (238)
+
+- AZ-01 Amish Shah: no_votes (2026)
+- AZ-02 Elijah Crane: no_votes (2026)
+- AZ-03 Yassamin Ansari: no_votes (2026)
+- AZ-04 Greg Stanton: no_votes (2026)
+- AZ-05 Mark Lamb: no_votes (2026)
+- AZ-06 JoAnna Mendoza: no_votes (2026)
+- AZ-07 Adelita S. Grijalva: no_votes (2026)
+- AZ-08 Abraham J. Hamadeh: no_votes (2026)
+- AZ-09 Paul A. Gosar: no_votes (2026)
+- CA-01 Mike McGuire: no race found (2026)
+- CA-02 Jared Huffman: no race found (2026)
+- CA-03 Ami Bera: no race found (2026)
+- CA-04 Eric Jones: no race found (2026)
+- CA-05 Tom McClintock: no race found (2026)
+- CA-06 Richard Pan: no race found (2026)
+- CA-07 Doris O. Matsui: no race found (2026)
+- CA-08 John Garamendi: no race found (2026)
+- CA-09 Josh Harder: no race found (2026)
+- CA-10 Mark DeSaulnier: no race found (2026)
+- CA-11 Scott Wiener: no race found (2026)
+- CA-12 Lateefah Simon: no race found (2026)
+- CA-13 Adam Gray: no race found (2026)
+- CA-14 Aisha Wahab: no race found (2026)
+- CA-15 Kevin Mullin: no race found (2026)
+- CA-16 Sam T. Liccardo: no race found (2026)
+- CA-17 Ro Khanna: no race found (2026)
+- CA-18 Zoe Lofgren: no race found (2026)
+- CA-19 Jimmy Panetta: no race found (2026)
+- CA-20 Vince Fong: no race found (2026)
+- CA-21 Jim Costa: no race found (2026)
+- CA-22 Randy Villegas: no race found (2026)
+- CA-23 Jay Obernolte: no race found (2026)
+- CA-24 Salud O. Carbajal: no race found (2026)
+- CA-25 Raul Ruiz: no race found (2026)
+- CA-26 Jacqui Irwin: no race found (2026)
+- CA-27 George Whitesides: no race found (2026)
+- CA-28 Judy Chu: no race found (2026)
+- CA-29 Luz M. Rivas: no race found (2026)
+- CA-30 Laura Friedman: no race found (2026)
+- CA-31 Gilbert Ray Cisneros, Jr.: no race found (2026)
+- CA-32 Brad Sherman: no race found (2026)
+- CA-33 Pete Aguilar: no race found (2026)
+- CA-34 Angela Gonzales-Torres: no race found (2026)
+- CA-35 Norma J. Torres: no race found (2026)
+- CA-36 Ted Lieu: no race found (2026)
+- CA-37 Sydney Kamlager-Dove: no race found (2026)
+- CA-38 Hilda Solis: no race found (2026)
+- CA-39 Mark Takano: no race found (2026)
+- CA-40 Ken Calvert: no race found (2026)
+- CA-41 Linda T. Sánchez: no race found (2026)
+- CA-42 Robert Garcia: no race found (2026)
+- CA-43 Maxine Waters: no race found (2026)
+- CA-44 Nanette Diaz Barragán: no race found (2026)
+- CA-45 Derek Tran: no race found (2026)
+- CA-46 J. Luis Correa: no race found (2026)
+- CA-47 Dave Min: no race found (2026)
+- CA-48 Marni von Wilpert: no race found (2026)
+- CA-49 Mike Levin: no race found (2026)
+- CA-50 Scott H. Peters: no race found (2026)
+- CA-51 Sara Jacobs: no race found (2026)
+- CA-52 Juan Vargas: no race found (2026)
+- CO-01 Melat Kiros: no_votes (2026)
+- CO-04 Eileen Laubacher: no_votes (2026)
+- CO-05 Jessica Killin: no_votes (2026)
+- CO-06 Jason Crow: no_votes (2026)
+- CO-07 Brittany Pettersen: no_votes (2026)
+- CO-08 Manny Rutinel: no_votes (2026)
+- FL-10 Maxwell Frost: no_votes (2026)
+- IL-01 Jonathan L. Jackson: no_votes (2026)
+- IL-02 Donna Miller: no_votes (2026)
+- IL-03 Delia C. Ramirez: no_votes (2026)
+- IL-04 Patty García: no_votes (2026)
+- IL-05 Mike Quigley: no_votes (2026)
+- IL-06 Sean Casten: no_votes (2026)
+- IL-07 La Shawn Ford: no_votes (2026)
+- IL-08 Melissa Bean: no_votes (2026)
+- IL-09 Daniel Biss: no_votes (2026)
+- IL-10 Bradley Scott Schneider: no_votes (2026)
+- IL-11 Bill Foster: no_votes (2026)
+- IL-12 Mike Bost: no_votes (2026)
+- IL-13 Nikki Budzinski: no_votes (2026)
+- IL-14 Lauren Underwood: no_votes (2026)
+- IL-15 Mary E. Miller: no_votes (2026)
+- IL-16 Darin LaHood: no_votes (2026)
+- IL-17 Eric Sorensen: no_votes (2026)
+- IN-02 Rudy Yakym III: no race found (2026)
+- MA-02 James P. McGovern: no race found (2026)
+- MA-05 Katherine M. Clark: no race found (2026)
+- MA-07 Ayanna Pressley: no race found (2026)
+- MD-04 Glenn Ivey: no_votes (2026)
+- MD-05 Adrian Boafo: no_votes (2026)
+- MD-08 Jamie Raskin: no_votes (2026)
+- ME-01 Chellie Pingree: no_votes (2026)
+- ME-02 Paul LePage: no_votes (2026)
+- NE-01 Mike Flood: no_votes (2026)
+- NE-03 Adrian Smith: no_votes (2026)
+- NJ-01 Donald Norcross: no_votes (2026)
+- NJ-03 Herbert C. Conaway, Jr.: no_votes (2026)
+- NJ-04 Christopher H. Smith: no_votes (2026)
+- NJ-05 Josh Gottheimer: no_votes (2026)
+- NJ-06 Frank Pallone, Jr.: no_votes (2026)
+- NJ-09 Nellie Pou: no_votes (2026)
+- NJ-10 LaMonica McIver: no_votes (2026)
+- NJ-11 Analilia Mejia: no_votes (2026)
+- NJ-12 Adam Hamawy: no_votes (2026)
+- NM-01 Melanie A. Stansbury: no_votes (2026)
+- NM-02 Gabe Vasquez: no_votes (2026)
+- NM-03 Teresa Leger Fernandez: no_votes (2026)
+- NY-01 Nick LaLota: no_votes (2026)
+- NY-02 Andrew R. Garbarino: no_votes (2026)
+- NY-03 Thomas R. Suozzi: no_votes (2026)
+- NY-04 Laura Gillen: no_votes (2026)
+- NY-05 Gregory W. Meeks: no_votes (2026)
+- NY-06 Grace Meng: no_votes (2026)
+- NY-07 Claire Valdez: no_votes (2026)
+- NY-08 Hakeem S. Jeffries: no_votes (2026)
+- NY-09 Yvette D. Clarke: no_votes (2026)
+- NY-10 Brad Lander: no_votes (2026)
+- NY-11 Nicole Malliotakis: no_votes (2026)
+- NY-12 Micah Lasher: no_votes (2026)
+- NY-13 Darializa Avila Chevalier: no_votes (2026)
+- NY-14 Alexandria Ocasio-Cortez: no_votes (2026)
+- NY-15 Ritchie Torres: no_votes (2026)
+- NY-16 George Latimer: no_votes (2026)
+- NY-17 Cait Conley: no_votes (2026)
+- NY-18 Patrick Ryan: no_votes (2026)
+- NY-19 Josh Riley: no_votes (2026)
+- NY-20 Paul Tonko: no_votes (2026)
+- NY-21 Anthony Constantino: no_votes (2026)
+- NY-22 John W. Mannion: no_votes (2026)
+- NY-23 Nicholas A. Langworthy: no_votes (2026)
+- NY-24 Claudia Tenney: no_votes (2026)
+- NY-25 Joseph D. Morelle: no_votes (2026)
+- NY-26 Timothy M. Kennedy: no_votes (2026)
+- OR-01 Suzanne Bonamici: no_votes (2026)
+- OR-02 Cliff Bentz: no_votes (2026)
+- OR-03 Maxine Dexter: no_votes (2026)
+- OR-04 Val T. Hoyle: no_votes (2026)
+- OR-05 Janelle S. Bynum: no_votes (2026)
+- OR-06 Andrea Salinas: no_votes (2026)
+- PA-01 Bob Harvie: no_votes (2026)
+- PA-02 Brendan F. Boyle: no_votes (2026)
+- PA-03 Chris Rabb: no_votes (2026)
+- PA-04 Madeleine Dean: no_votes (2026)
+- PA-05 Mary Gay Scanlon: no_votes (2026)
+- PA-06 Chrissy Houlahan: no_votes (2026)
+- PA-07 Bob Brooks: no_votes (2026)
+- PA-08 Paige Cognetti: no_votes (2026)
+- PA-09 Daniel Meuser: no_votes (2026)
+- PA-10 Janelle Stelson: no_votes (2026)
+- PA-11 Lloyd Smucker: no_votes (2026)
+- PA-12 Summer L. Lee: no_votes (2026)
+- PA-13 John Joyce: no_votes (2026)
+- PA-14 Guy Reschenthaler: no_votes (2026)
+- PA-15 Glenn Thompson: no_votes (2026)
+- PA-16 Mike Kelly: no_votes (2026)
+- PA-17 Christopher R. Deluzio: no_votes (2026)
+- RI-01 Gabe Amo: no race found (2026)
+- RI-02 Seth Magaziner: no race found (2026)
+- TN-01 Diana Harshbarger: no race found (2026)
+- TN-02 Tim Burchett: no race found (2026)
+- TN-03 Charles J. "Chuck" Fleischmann: no race found (2026)
+- TN-04 Victoria Broderick: no race found (2026)
+- TN-05 Charlie Hatcher: no race found (2026)
+- TN-06 Johnny Garrett: no race found (2026)
+- TN-07 Matt Van Epps: no race found (2026)
+- TN-08 David Kustoff: no race found (2026)
+- TN-09 Brent Taylor: no race found (2026)
+- TX-01 Nathaniel Moran: no_votes (2026)
+- TX-02 Steve Toth: no_votes (2026)
+- TX-03 Keith Self: no_votes (2026)
+- TX-04 Pat Fallon: no_votes (2026)
+- TX-05 Lance Gooden: no_votes (2026)
+- TX-06 Jake Ellzey: no_votes (2026)
+- TX-07 Lizzie Fletcher: no_votes (2026)
+- TX-08 Jessica Steinmann: no_votes (2026)
+- TX-10 Chris Gober: no_votes (2026)
+- TX-11 August Pfluger: no_votes (2026)
+- TX-12 Craig A. Goldman: no_votes (2026)
+- TX-13 Ronny Jackson: no_votes (2026)
+- TX-14 Randy K. Weber, Sr.: no_votes (2026)
+- TX-15 Bobby Pulido: no_votes (2026)
+- TX-16 Veronica Escobar: no_votes (2026)
+- TX-17 Pete Sessions: no_votes (2026)
+- TX-18 Christian D. Menefee: no_votes (2026)
+- TX-19 Tom Sell: no_votes (2026)
+- TX-20 Joaquin Castro: no_votes (2026)
+- TX-21 Mark Teixeira: no_votes (2026)
+- TX-22 Trever Nehls: no_votes (2026)
+- TX-23 Katy Padilla Stout: no_votes (2026)
+- TX-24 Beth Van Duyne: no_votes (2026)
+- TX-25 Roger Williams: no_votes (2026)
+- TX-26 Brandon Gill: no_votes (2026)
+- TX-27 Michael Cloud: no_votes (2026)
+- TX-28 Henry Cuellar: no_votes (2026)
+- TX-29 Sylvia R. Garcia: no_votes (2026)
+- TX-30 Frederick Haynes III: no_votes (2026)
+- TX-31 John R. Carter: no_votes (2026)
+- TX-32 Jace Yarbrough: no_votes (2026)
+- TX-33 Colin Z. Allred: no_votes (2026)
+- TX-34 Vicente Gonzalez: no_votes (2026)
+- TX-35 Johnny Garcia: no_votes (2026)
+- TX-36 Brian Babin: no_votes (2026)
+- TX-37 Greg Casar: no_votes (2026)
+- TX-38 Jon Bonck: no_votes (2026)
+- VA-01 Shannon Taylor: no_votes (2026)
+- VA-02 Elaine G. Luria: no_votes (2026)
+- VA-03 Robert C. "Bobby" Scott: no_votes (2026)
+- VA-04 Jennifer L. McClellan: no_votes (2026)
+- VA-06 Ben Cline: no_votes (2026)
+- VA-07 Eugene Simon Vindman: no_votes (2026)
+- VA-08 Donald S. Beyer, Jr.: no_votes (2026)
+- VA-09 H. Morgan Griffith: no_votes (2026)
+- VA-10 Suhas Subramanyam: no_votes (2026)
+- VA-11 James R. Walkinshaw: no_votes (2026)
+- WA-01 Suzan K. DelBene: no_votes (2026)
+- WA-02 Rick Larsen: no_votes (2026)
+- WA-03 Marie Gluesenkamp Perez: no_votes (2026)
+- WA-04 Amanda McKinney: no_votes (2026)
+- WA-05 Michael Baumgartner: no_votes (2026)
+- WA-06 Emily Randall: no_votes (2026)
+- WA-07 Pramila Jayapal: no_votes (2026)
+- WA-08 Kim Schrier: no_votes (2026)
+- WA-09 Adam Smith: no_votes (2026)
+- WA-10 Marilyn Strickland: no_votes (2026)
+- WI-01 Mitchell Berman: no race found (2026)
+- WI-02 Mark Pocan: no race found (2026)
+- WI-03 Rebecca Cooke: no race found (2026)
+- WI-04 Gwen Moore: no race found (2026)
+- WI-05 Scott Fitzgerald: no race found (2026)
+- WI-06 Glenn Grothman: no race found (2026)
+- WI-07 Michael Alfonso: no race found (2026)
+- WI-08 Tony Wied: no race found (2026)
+- WV-01 Carol D. Miller: no_votes (2026)
+- WV-02 Riley M. Moore: no_votes (2026)
+- CA-S1 Adam B. Schiff: no race found (2024)
+- CA-S3 Alex Padilla: no race found (2022)
+- MN-S1 Amy Klobuchar: no race found (2024)
+
+## Kamala missing (280)
+
+- AL-03
+- AL-04
+- AL-05
+- AR-01
+- AR-02
+- AR-03
+- AR-04
+- AZ-01
+- AZ-02
+- AZ-03
+- AZ-04
+- AZ-05
+- AZ-06
+- AZ-07
+- AZ-08
+- AZ-09
+- CA-34
+- CA-37
+- CA-43
+- CO-01
+- CO-02
+- CO-03
+- CO-04
+- CO-05
+- CO-06
+- CO-07
+- CO-08
+- CT-01
+- CT-02
+- CT-03
+- CT-04
+- CT-05
+- FL-01
+- FL-02
+- FL-04
+- FL-05
+- FL-07
+- GA-01
+- GA-02
+- GA-03
+- GA-04
+- GA-05
+- GA-06
+- GA-07
+- GA-08
+- GA-09
+- GA-10
+- GA-11
+- GA-12
+- GA-13
+- GA-14
+- HI-01
+- HI-02
+- IA-01
+- IA-02
+- IA-03
+- IA-04
+- ID-01
+- ID-02
+- IL-01
+- IL-02
+- IL-03
+- IL-04
+- IL-05
+- IL-06
+- IL-07
+- IL-08
+- IL-09
+- IL-10
+- IL-11
+- IL-12
+- IL-13
+- IL-14
+- IL-15
+- IL-16
+- IL-17
+- IN-01
+- IN-02
+- IN-03
+- IN-04
+- IN-05
+- IN-06
+- IN-07
+- IN-08
+- IN-09
+- KS-01
+- KS-02
+- KS-03
+- KS-04
+- KY-01
+- KY-02
+- KY-03
+- KY-04
+- KY-05
+- KY-06
+- MA-01
+- MA-02
+- MA-03
+- MA-04
+- MA-05
+- MA-06
+- MA-07
+- MA-08
+- MA-09
+- MD-01
+- MD-02
+- MD-03
+- MD-04
+- MD-05
+- MD-06
+- MD-07
+- MD-08
+- ME-01
+- ME-02
+- MI-01
+- MI-02
+- MI-03
+- MI-04
+- MI-05
+- MI-06
+- MI-07
+- MI-08
+- MI-09
+- MI-10
+- MI-11
+- MI-12
+- MI-13
+- MN-02
+- MN-03
+- MN-04
+- MN-05
+- MN-06
+- MN-07
+- MN-08
+- MO-01
+- MO-02
+- MO-03
+- MO-04
+- MO-05
+- MO-06
+- MO-07
+- MO-08
+- MS-01
+- MS-02
+- MS-03
+- MS-04
+- MT-01
+- MT-02
+- NC-02
+- NC-04
+- NC-05
+- NC-06
+- NC-07
+- NC-08
+- NC-09
+- NC-11
+- NC-12
+- NC-13
+- NE-01
+- NE-02
+- NE-03
+- NH-01
+- NH-02
+- NJ-01
+- NJ-02
+- NJ-03
+- NJ-04
+- NJ-05
+- NJ-06
+- NJ-07
+- NJ-08
+- NJ-09
+- NJ-10
+- NJ-11
+- NJ-12
+- NM-01
+- NM-02
+- NM-03
+- NV-01
+- NV-02
+- NV-03
+- NV-04
+- NY-01
+- NY-02
+- NY-03
+- NY-04
+- NY-05
+- NY-06
+- NY-07
+- NY-08
+- NY-09
+- NY-10
+- NY-11
+- NY-12
+- NY-13
+- NY-14
+- NY-15
+- NY-16
+- NY-17
+- NY-18
+- NY-19
+- NY-20
+- NY-21
+- NY-22
+- NY-23
+- NY-24
+- NY-25
+- NY-26
+- OH-03
+- OH-11
+- OK-01
+- OK-02
+- OK-03
+- OK-04
+- OK-05
+- OR-01
+- OR-02
+- OR-03
+- OR-04
+- OR-05
+- OR-06
+- PA-01
+- PA-02
+- PA-03
+- PA-04
+- PA-05
+- PA-06
+- PA-07
+- PA-08
+- PA-09
+- PA-10
+- PA-11
+- PA-12
+- PA-13
+- PA-14
+- PA-15
+- PA-16
+- PA-17
+- RI-01
+- RI-02
+- SC-01
+- SC-02
+- SC-03
+- SC-04
+- SC-05
+- SC-06
+- SC-07
+- TN-01
+- TX-19
+- VA-01
+- VA-02
+- VA-03
+- VA-04
+- VA-05
+- VA-06
+- VA-07
+- VA-08
+- VA-09
+- VA-10
+- VA-11
+- WA-01
+- WA-02
+- WA-03
+- WA-04
+- WA-05
+- WA-06
+- WA-07
+- WA-08
+- WA-09
+- WA-10
+- WI-01
+- WI-02
+- WI-03
+- WI-04
+- WI-05
+- WI-06
+- WI-07
+- WI-08
+- WV-01
+- WV-02
+
+## Notes (2)
+
+- Kamala sources: {'missing': 280, 'pending': 146, 'statewide': 107, 'n/a': 5}
+- data/inputs/pres_2024_by_cd119.csv not found: district-level Kamala values are null

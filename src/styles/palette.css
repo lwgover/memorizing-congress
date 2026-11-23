@@ -1,0 +1,51 @@
+/* Red and blue mean party (chips, maps, sparklines, logo). Teal and raspberry are accents for
+   progress and study state. Actions and everything else are ink, paper and gray. */
+:root {
+  --bg: #ffffff;
+  --surface: #f5f4f6;
+  --ink: #121014;
+  --muted: #615b66;
+  --soft: #a29ca6;
+  --line: #e4e1e6;
+
+  --dem: #3c0bdf;
+  --dem-accent: #0288ff;
+  --rep: #f41549;
+  --rep-accent: #ff6b8e;
+  --ind: #a8a1ab;
+
+  --teal: #1b998b;       /* correct, reviews, mastery */
+  --raspberry: #d81159;  /* new members, streak, your tap */
+
+  --good: var(--teal);
+  --bad: var(--muted);
+  --map-land: #dcd8e0;
+  --map-edge: #ffffff;
+  --map-line: #8c8592;
+
+  /* mastery scale: new -> mastered */
+  --m0: #edf6f4; --m1: #cbe6e0; --m2: #93cdc2; --m3: #52b2a3; --m4: #1b998b; --m5: #0f5a52;
+
+  --font: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --radius: 10px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e0d10; --surface: #19181c; --ink: #f3f2f5; --muted: #a29ca6; --soft: #6a646e; --line: #2b2930;
+    --dem: #7f63ff; --dem-accent: #4fb2ff; --rep: #ff4d73; --rep-accent: #ff94ad; --ind: #c4bec6;
+    --teal: #1b998b; --raspberry: #ff3d7f;
+    --map-land: #36323d; --map-edge: #0e0d10; --map-line: #847d8a;
+    --m0: #1a2422; --m1: #1d3a35; --m2: #1f5a51; --m3: #1b998b; --m4: #5cc0b2; --m5: #a9e3d9;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e0d10; --surface: #19181c; --ink: #f3f2f5; --muted: #a29ca6; --soft: #6a646e; --line: #2b2930;
+  --dem: #7f63ff; --dem-accent: #4fb2ff; --rep: #ff4d73; --rep-accent: #ff94ad; --ind: #c4bec6;
+  --teal: #1b998b; --raspberry: #ff3d7f;
+  --map-land: #36323d; --map-edge: #0e0d10; --map-line: #847d8a;
+  --m0: #1a2422; --m1: #1d3a35; --m2: #1f5a51; --m3: #1b998b; --m4: #5cc0b2; --m5: #a9e3d9;
+  color-scheme: dark;
+}

@@ -1,0 +1,121 @@
+[
+  {
+    "seat": "LA-05",
+    "chamber": "house",
+    "state": "LA",
+    "district": 5,
+    "status": "pending",
+    "candidates": [
+      {
+        "name": "Gabe Firment",
+        "party": "Republican"
+      },
+      {
+        "name": "Misti Cordell",
+        "party": "Republican"
+      },
+      {
+        "name": "Michael Echols",
+        "party": "Republican"
+      },
+      {
+        "name": "Stewart Cathey Jr.",
+        "party": "Republican"
+      },
+      {
+        "name": "Antonio Wilson",
+        "party": "Democratic"
+      },
+      {
+        "name": "Dan McKay",
+        "party": "Democratic"
+      },
+      {
+        "name": "Austin Magee",
+        "party": "Republican"
+      },
+      {
+        "name": "Omar Dantzler",
+        "party": "Republican"
+      },
+      {
+        "name": "Gabe Firment",
+        "party": "Republican"
+      },
+      {
+        "name": "Patricia Moore",
+        "party": "Democratic"
+      }
+    ]
+  },
+  {
+    "seat": "LA-06",
+    "chamber": "house",
+    "state": "LA",
+    "district": 6,
+    "status": "pending",
+    "candidates": [
+      {
+        "name": "Blake Miguez",
+        "party": "Republican"
+      },
+      {
+        "name": "Rick Edmonds",
+        "party": "Republican"
+      },
+      {
+        "name": "Rubia Garcia",
+        "party": "Democratic"
+      },
+      {
+        "name": "Stephen Wagley",
+        "party": "Republican"
+      },
+      {
+        "name": "Pat Forbes",
+        "party": "Democratic"
+      },
+      {
+        "name": "Larry Davis",
+        "party": "Republican"
+      },
+      {
+        "name": "Monique Appeaning",
+        "party": "Republican"
+      },
+      {
+        "name": "Rufus Craig",
+        "party": "Libertarian"
+      },
+      {
+        "name": "Michael Mebruer",
+        "party": "Republican"
+      },
+      {
+        "name": "Chauna Banks",
+        "party": "Democratic"
+      },
+      {
+        "name": "Blake Miguez",
+        "party": "Republican"
+      }
+    ]
+  },
+  {
+    "seat": "MN-01",
+    "chamber": "house",
+    "state": "MN",
+    "district": 1,
+    "status": "pending",
+    "candidates": [
+      {
+        "name": "Brad Finstad",
+        "party": "Republican"
+      },
+      {
+        "name": "Jake Johnson",
+        "party": "DFL"
+      }
+    ]
+  }
+]

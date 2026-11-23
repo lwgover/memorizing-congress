@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-11-23T04:48:25Z",
+  "congress": 120,
+  "committee_congress": 119,
+  "fec_cycle": 2026,
+  "coverage": {
+    "members": 538,
+    "pending_seats": 3,
+    "photo": 411,
+    "war": 523,
+    "kamala2Way": 107,
+    "last2Way": 300,
+    "caucuses": 297,
+    "fundraising": 6,
+    "committees": 407,
+    "funFacts": 0,
+    "provisionalIds": 118
+  },
+  "sources_doc": "DATA_SOURCES.md"
+}

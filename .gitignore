@@ -1,0 +1,17 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+
+# Pipeline caches / intermediates (regenerable; sources are revision-pinned in reports)
+data/raw/
+data/interim/
+
+# Node / build (site, later)
+node_modules/
+dist/
+
+.DS_Store
