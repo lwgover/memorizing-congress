@@ -138,17 +138,30 @@ export function stateHold(data: AppData): ReturnType<typeof stateProgress> | nul
 export function nextNewMembers(data: AppData, n: number): Member[] {
   const intro = getState().introduced;
   const rest = introductionOrder(data).filter((m) => !intro[m.id]);
-  if (!getState().settings.holdAfterState || getState().settings.holdOverride === today()) return rest.slice(0, n);
-  if (stateHold(data)) return [];
-  // take members in order, but stop at the end of a big delegation so it can sink in
+  const holding = getState().settings.holdAfterState && getState().settings.holdOverride !== today();
+  if (holding && stateHold(data)) return [];
+  if (n <= 0) return [];
   const out: Member[] = [];
   for (const m of rest) {
-    if (out.length >= n) break;
+    if (out.length >= n) {
+      // never strand a few members of a state for another day (e.g. Delaware's one House
+      // member after its two senators): finish a state when only 1-3 of it are left
+      const leftInState = rest.filter((x) => x.state === m.state && !out.includes(x)).length;
+      const startedHere = out.some((x) => x.state === m.state) || data.members.some((x) => x.state === m.state && intro[x.id]);
+      if (!(startedHere && leftInState < HOLD_MIN_MEMBERS)) break;
+    }
     out.push(m);
+    // with the hold on, stop at the end of a big delegation so it can sink in
     const stateDone = !rest.some((x) => x.state === m.state && !out.includes(x));
-    if (stateDone && data.members.filter((x) => x.state === m.state).length >= HOLD_MIN_MEMBERS) break;
+    if (holding && stateDone && data.members.filter((x) => x.state === m.state).length >= HOLD_MIN_MEMBERS) break;
   }
   return out;
+}
+
+/** Members of a state you haven't been introduced to yet. */
+export function unmetInState(data: AppData, state: string): Member[] {
+  const intro = getState().introduced;
+  return introductionOrder(data).filter((m) => m.state === state && !intro[m.id]);
 }
 
 /** Every live card for the introduced members of one state, weakest first (for drills). */

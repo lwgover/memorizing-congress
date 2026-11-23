@@ -5,7 +5,7 @@ import type { Member, Party } from "../data/types";
 import { parseSeat } from "../games/match";
 import { shuffle } from "../games/seed";
 import type { Ctx } from "../main";
-import { CARD_LABEL, dueCards, introduce, newRemainingToday, nextNewMembers, parseCardId, startedStates, stateCards, stateHold, stateProgress, syncUnlocks, unseenCards, type CardType } from "../srs/cards";
+import { CARD_LABEL, dueCards, introduce, newRemainingToday, nextNewMembers, parseCardId, startedStates, stateCards, stateHold, stateProgress, syncUnlocks, unmetInState, unseenCards, type CardType } from "../srs/cards";
 import { closeness, ratingForExact, ratingForScore, type NumericFact } from "../srs/closeness";
 import { recordConfusion } from "../srs/confusions";
 import { previews, Rating, review, type Grade } from "../srs/scheduler";
@@ -45,7 +45,7 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
 
   const head = h("div.sec-head");
   const stage = h("div.stack", { style: "gap:16px" });
-  root.append(h("section.stack", { style: "gap:16px" }, modeBar(), head, stage));
+  root.append(h("section.stack", { style: "gap:16px" }, modeBar(), unmetNotice(), head, stage));
   const onKey = (e: KeyboardEvent) => keyHandler?.(e);
   window.addEventListener("keydown", onKey);
   nextCard();
@@ -54,6 +54,20 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
   function renderHead(label: string) {
     const title = mode === "drill" ? `Drill: ${data.stateNames.get(drillState)}` : MODE_LABEL[mode];
     head.replaceChildren(h("h2", title), h("span.muted.small.num", `${label} · ${queue.length} left · ${done} done`));
+  }
+
+  /** In a drill: members of this state you haven't met yet, with a way to add them. */
+  function unmetNotice(): HTMLElement | null {
+    if (mode !== "drill") return null;
+    const unmet = unmetInState(data, drillState);
+    if (!unmet.length) return null;
+    const names = unmet.map((m) => `${m.name} (${m.chamber === "senate" ? "Senator" : seatId(m)})`).join(", ");
+    return h("div.panel.fill.row", { style: "justify-content:space-between" },
+      h("span.small", `${data.stateNames.get(drillState)} has ${unmet.length} member${unmet.length === 1 ? "" : "s"} you haven't met yet: `, h("b", names), "."),
+      h("button.btn.sm", { type: "button", onclick: () => {
+        introduce(unmet);
+        location.hash = `#/study?mode=drill&state=${drillState}&t=${Date.now()}`;
+      } }, "Add to this drill"));
   }
 
   /** Today's session / Reviews only / Drill a state (with how well each state has stuck). */
