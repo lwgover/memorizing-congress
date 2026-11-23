@@ -1,6 +1,6 @@
 # members.json build
 
-_Generated 2026-11-23T18:53:08Z_
+_Generated 2026-11-23T19:06:46Z_
 
 ## Errors (0)
 
@@ -13,14 +13,14 @@ _none_
 - photo: 411
 - war: 523
 - kamala2Way: 533
-- last2Way: 369
+- last2Way: 406
 - caucuses: 297
 - redToBlue: 33
 - seatFlipped: 64
 - raceRole: 86
 - issuePacSupport: 233
 - issuePacOpposition: 45
-- fundraising: 96
+- fundraising: 140
 - committees: 407
 - funFacts: 0
 - provisionalIds: 118

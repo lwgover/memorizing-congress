@@ -22,7 +22,7 @@ Update the **Status** table and append to the **Update log** whenever new data l
 | Redrawn districts | 148 in 9 states | Census cd119 vs cd120, block by block | Decide on 10 tiny changes (see below) |
 | WAR | 523 / 538 members; 2,965 / 2,972 CSV rows matched | Split Ticket CSV | 15 have no row (uncontested / same-party / delegates) |
 | Kamala 2-way | 533 / 538 (all but the 5 territorial delegates) | The Downballot (districts) + FEC (statewide) | Done. No `pending` or `missing` left |
-| Last 2-way | 369 / 538 | Official state counts (CA, PA) → Wikipedia | Still missing: TX, NY, IL, VA, WA, AZ, TN, WI and others (see §6) |
+| Last 2-way | 406 / 538 | Official state counts (CA, PA, TX) → Wikipedia | Still missing: NY, IL, VA, WA, AZ, TN, WI and others (see §6) |
 | Fundraising | 36 / 538 | OpenFEC | Key allows 60 requests/hour: rerun 09 hourly (cached) until done |
 | Committees | 407 / 538 (119th) | congress-legislators | New members get assignments with the 120th (flip `COMMITTEE_CONGRESS`) |
 | First elected / years | 538 / 538 | Derived from terms + `first_elected.csv` | Done |
@@ -159,7 +159,9 @@ Similar technical changes in IL, MO, and SC (≤ 225 people) are already treated
   - **CA:** Secretary of State JSON API (`api.sos.ca.gov/returns/us-rep/district/N`). All 52 districts at 100% of precincts reporting (semi-official until Dec 12 certification). Every official winner matched the roster.
   - **PA:** Department of State public JSON API (`/api/ElectionReturn/GetCountyData?countyName=X&electionid=117&electiontype=G`). It needs no cookies or browser session. One request per county (67) at 1 per second, with "Representative in Congress" votes summed per district. All 17 districts; winners match the roster. Unofficial until certification.
     - The results *website* has bot protection, but this API endpoint is public. Don't replay browser session/anti-bot cookies in the pipeline.
-  - **Checked 2026-11-23, not usable yet:** TX and NY refuse automated requests (403); IL has only posted its primary, and the general follows December certification.
+  - **TX:** the Secretary of State's results app (goelect.txelections.civixapps.com) loads from a public JSON API: `/api-ivis-system/api/s3/enr/electionConstants` lists election IDs (2026 general = 53815), and `/api-ivis-system/api/s3/enr/election/53815` returns every race in one file. Payloads are base64-encoded JSON, and House races are in the "Federal" section. All 38 districts; winners match the roster. Unofficial until the canvass.
+  - **Manual entry for blocked states:** `data/inputs/official_manual/<ST>.csv` (`district, candidate, party, votes[, source_url]`); see the README there. Used like the automated states, with winners checked against the roster.
+  - **Checked 2026-11-23, not usable yet:** NY's whole results site (nyenr.elections.ny.gov) is behind a Cloudflare bot challenge (403 even for robots.txt), with no open data feed, so it needs the manual CSV; IL has only posted its primary, and the general follows December certification.
 - **House 2026, otherwise**: Wikipedia per-state pages (*2026 United States House of Representatives election(s) in <State>*), general-election `{{Election box}}` vote counts. Fallback: percentages from the national results table.
 - **PR**: 2024 Resident Commissioner page.
 - **Senate**: class II and the 2026 specials from the 2026 table; class I from *2024 United States Senate elections*; class III from *2022 United States Senate elections*.
@@ -296,6 +298,7 @@ Inputs you supply go in `data/inputs/` (`pres_2024_by_cd119.csv`).
 
 Append newest first: date, what changed, and why.
 
+- **2026-11-23**: Texas official House results (SOS Civix ENR public API, 38 districts); last2Way now 406/538.
 - **2026-11-23**: Pennsylvania official House results (public county API, 17 districts); last2Way now 369/538.
 - **2026-11-23**: California official House results (SOS API) for all 52 districts; last2Way now 352/538. TX/NY/PA/IL official sites checked: blocked or not yet posted.
 - **2026-11-23**: Kamala 2-way filled for every district from The Downballot's 2024 results on 2026 lines (vote totals): 280 unchanged + 146 redrawn. No pending/missing left (M5b).

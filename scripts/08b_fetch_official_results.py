@@ -12,8 +12,22 @@ States so far
       One request per county (67, 1/second); "Representative in Congress" votes are summed per
       district across counties. Unofficial until certification.
 
+  TX  Secretary of State results app (Civix IVIS ENR, goelect.txelections.civixapps.com). Its public
+      JSON API, read without cookies or a browser session:
+        /api-ivis-system/api/s3/enr/electionConstants   -> election IDs (2026 general = 53815)
+        /api-ivis-system/api/s3/enr/election/53815      -> all races in one file
+      Payloads are base64-encoded JSON; House races are in the "Federal" section. Unofficial
+      until the canvass.
+
+Manual input (any state): data/inputs/official_manual/<ST>.csv with columns
+  district, candidate, party, votes        (district = number, or AL / 0 for at-large;
+                                            party = D / R / I or DEM / REP / ... ; votes = integer)
+  plus an optional source_url column. Use this for states whose results sites block scripts:
+  open the site in your browser, copy the U.S. House results into the CSV.
+
 Checked and not usable yet (2026-11-23):
-  TX, NY  results sites refuse automated requests (HTTP 403)
+  NY      whole site (nyenr.elections.ny.gov) is behind a Cloudflare bot challenge (403 even for
+          robots.txt); no open data feed. Use the manual CSV, or wait for certified results.
   IL      only the 2026 primary is posted; the general comes after December certification
 
 Output columns: seat, state, district, candidate, party (D/R/I), votes, pct, reporting,
@@ -36,6 +50,8 @@ from common import INTERIM, RAW, http_get, log, norm_name, party_code, seat_key,
 
 CA_URL = "https://api.sos.ca.gov/returns/us-rep/district/{n}"
 CA_DISTRICTS = 52
+TX_BASE = "https://goelect.txelections.civixapps.com/api-ivis-system/api/s3/enr"
+TX_ELECTION = 53815  # "2026 NOVEMBER GENERAL ELECTION" in electionConstants
 PA_URL = "https://www.electionreturns.pa.gov/api/ElectionReturn/GetCountyData"
 PA_ELECTION = {"electionid": 117, "electiontype": "G", "isactive": 1, "methodName": "GetCountyData"}
 PA_COUNTIES = """ADAMS ALLEGHENY ARMSTRONG BEAVER BEDFORD BERKS BLAIR BRADFORD BUCKS BUTLER CAMBRIA CAMERON CARBON
@@ -115,9 +131,67 @@ def fetch_pa(force: bool) -> list[dict]:
     return rows
 
 
+def b64json(x):
+    """Civix payloads: JSON whose values are base64-encoded JSON."""
+    import base64
+    return json.loads(base64.b64decode(x)) if isinstance(x, str) else x
+
+
+def fetch_tx(force: bool) -> list[dict]:
+    path = RAW / "official" / "TX" / f"election_{TX_ELECTION}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if force or not path.exists():
+        r = http_get(f"{TX_BASE}/election/{TX_ELECTION}", retries=3)
+        r.raise_for_status()
+        path.write_text(r.text, encoding="utf-8")
+    d = json.loads(path.read_text(encoding="utf-8"))
+    d = b64json(d.get("upload", d))
+    fed = b64json(d["Federal"])
+    rows = []
+    for race in fed.get("Races", []):
+        m = re.match(r"U\.\s*S\.\s*REPRESENTATIVE DISTRICT (\d+)", race.get("N", ""))
+        if not m:
+            continue
+        n = int(m.group(1))
+        total = race.get("T") or sum(c.get("V", 0) for c in race["Candidates"])
+        for c in race["Candidates"]:
+            name = re.sub(r"\s*\(I\)\s*$", "", c.get("N", "")).strip()  # "(I)" marks the incumbent
+            rows.append({"seat": seat_key("house", "TX", n), "state": "TX", "district": n, "candidate": title(name),
+                         "party": party_code(c.get("P")), "votes": int(c.get("V") or 0),
+                         "pct": round(100 * (c.get("V") or 0) / max(total, 1), 2),
+                         "reporting": "TX SOS election-night results (unofficial until canvass)", "reporting_time": None,
+                         "source_url": "https://goelect.txelections.civixapps.com/ivis-enr-ui/races"})
+    return rows
+
+
+def load_manual() -> list[dict]:
+    """Hand-entered official results: data/inputs/official_manual/<ST>.csv (see module docstring)."""
+    from common import DATA
+    rows = []
+    for f in sorted((DATA / "inputs" / "official_manual").glob("*.csv")):
+        st = f.stem.upper()[:2]
+        df = pd.read_csv(f, dtype=str).fillna("")
+        missing = {"district", "candidate", "party", "votes"} - set(df.columns)
+        if missing:
+            raise SystemExit(f"08b: {f.name} is missing columns {sorted(missing)}")
+        tot: dict[int, int] = {}
+        recs = []
+        for r in df.itertuples():
+            d = str(r.district).strip().upper()
+            n = 0 if d in ("AL", "0", "") else int(re.sub(r"\D", "", d))
+            v = votes(r.votes)
+            tot[n] = tot.get(n, 0) + v
+            recs.append((n, r.candidate.strip(), party_code(r.party), v, getattr(r, "source_url", "") or f"manual: {f.name}"))
+        for n, name, party, v, url in recs:
+            rows.append({"seat": seat_key("house", st, n), "state": st, "district": n, "candidate": name, "party": party,
+                         "votes": v, "pct": round(100 * v / max(tot[n], 1), 2), "reporting": f"manual entry ({f.name})",
+                         "reporting_time": None, "source_url": url})
+    return rows
+
+
 def main() -> None:
     force = "--force" in sys.argv
-    rows = fetch_ca(force) + fetch_pa(force)
+    rows = fetch_ca(force) + fetch_pa(force) + fetch_tx(force) + load_manual()
     df = pd.DataFrame(rows)
     df.to_csv(INTERIM / "official_house_2026.csv", index=False)
 
