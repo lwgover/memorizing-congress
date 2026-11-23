@@ -1,15 +1,20 @@
 /**
  * The typed-answer box used by Study and Tests.
- *  - instant: accepted the moment what you've typed is right (no Enter needed)
+ *  - instant: accepted once what you've typed is exactly right and you pause (no Enter needed)
  *  - "I don't know" button, or Enter twice on an empty box
  *  - optional suggestions (names only, so the list never gives away the district)
  */
 import { h } from "./dom";
 
+/** How long you have to stop typing before an exactly-right answer is accepted on its own. */
+const INSTANT_PAUSE_MS = 600;
+
 export interface AnswerOpts {
   placeholder: string;
   id?: string;
-  onSubmit: (v: string) => void;
+  /** Return false if the answer couldn't be read; the box stays open and shows invalidHint. */
+  onSubmit: (v: string) => boolean | void;
+  invalidHint?: string;
   onSkip: () => void;
   /** Return true if this value is already correct; it's then submitted immediately. */
   instant?: (v: string) => boolean;
@@ -22,29 +27,47 @@ export function answerInput(o: AnswerOpts): HTMLElement {
   const hint = h("span.muted.small", { "aria-live": "polite" });
   const list = h("ul", { role: "listbox", hidden: true });
   let done = false;
+  let pause = 0;
   let blankAt = 0;
   let sel = -1;
 
   const finish = (fn: () => void) => {
     if (done) return;
     done = true;
+    window.clearTimeout(pause);
     list.hidden = true;
     fn();
   };
   const submit = () => {
     const v = input.value.trim();
-    if (!v) return;
-    finish(() => o.onSubmit(v));
+    if (!v || done) return;
+    window.clearTimeout(pause);
+    if (o.onSubmit(v) === false) {
+      // couldn't read it: keep the box open instead of locking up
+      hint.textContent = o.invalidHint ?? "Couldn't read that. Try again.";
+      input.classList.add("no");
+      input.focus();
+      return;
+    }
+    done = true;
+    list.hidden = true;
   };
   const skip = () => finish(o.onSkip);
 
   input.addEventListener("input", () => {
     hint.textContent = "";
+    input.classList.remove("no");
     const v = input.value.trim();
+    // wait for a short pause in typing, then accept only if the value is still exactly right
+    window.clearTimeout(pause);
     if (o.instant && v.length >= 2 && o.instant(v)) {
-      input.classList.add("ok");
-      finish(() => o.onSubmit(v));
-      return;
+      pause = window.setTimeout(() => {
+        const now = input.value.trim();
+        if (!done && now === v && o.instant!(now)) {
+          input.classList.add("ok");
+          submit();
+        }
+      }, INSTANT_PAUSE_MS);
     }
     if (o.suggest) {
       const items = v ? o.suggest(v) : [];

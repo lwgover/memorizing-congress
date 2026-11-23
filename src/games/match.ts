@@ -36,6 +36,16 @@ export class NameMatcher {
     return hits[0]?.item.m.id === target.id && (hits[0].score ?? 1) < 0.3;
   }
 
+  /**
+   * Strict check for instant feedback while typing: the full name, an alias, or the exact
+   * last name. No typo tolerance, so a half-typed name never counts.
+   */
+  isExact(input: string, target: Member): boolean {
+    const n = norm(input);
+    if (!n) return false;
+    return [target.name, target.lastName, ...target.aliases].map(norm).includes(n);
+  }
+
   /** Who did they probably mean? (for the confusion log) */
   best(input: string): Member | null {
     const n = norm(input);
@@ -54,9 +64,25 @@ export class NameMatcher {
   }
 }
 
-/** "TX-35", "tx35", "TX 35", "DC", "AK-AL", "wy at large" -> {state, district}; district 0 = at-large. */
-export function parseSeat(input: string, validStates: Set<string>): { state: string; district: number | null } | null {
-  const s = input.trim().toUpperCase().replace(/AT[\s-]*LARGE/, "AL");
+/**
+ * "TX-35", "tx35", "TX 35", "DC", "AK-AL", "wy at large", and with full names:
+ * "Maryland", "Maryland 3", "Maryland's 3rd", "District of Columbia" -> {state, district}.
+ * district 0 = at-large; null = only a state was given.
+ */
+export function parseSeat(input: string, validStates: Set<string>, stateNames?: Map<string, string>): { state: string; district: number | null } | null {
+  let s = input.trim().toUpperCase().replace(/AT[\s-]*LARGE/, "AL").replace(/[’']S\b/, "").replace(/(\d)(ST|ND|RD|TH)\b/, "$1");
+  if (stateNames) {
+    // swap a leading full state name for its abbreviation (longest names first: "West Virginia" before "Virginia")
+    const names = [...stateNames.entries()].sort((a, b) => b[1].length - a[1].length);
+    for (const [abbr, name] of names) {
+      const n = name.toUpperCase();
+      if (s === n || s.startsWith(`${n} `) || s.startsWith(`${n}-`)) {
+        s = abbr + s.slice(n.length);
+        break;
+      }
+    }
+  }
+  s = s.replace(/\bDISTRICT\b|\bCD\b|#/g, " ").replace(/\s+/g, " ").trim();
   const m = s.match(/^([A-Z]{2})\s*[-–]?\s*(\d{1,2}|AL)?$/);
   if (!m || !validStates.has(m[1])) return null;
   const d = m[2] === undefined ? null : m[2] === "AL" ? 0 : Number(m[2]);

@@ -113,14 +113,15 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
     const skip = (answerText: string) => answered(id, m, { correct: false, given: "I don't know", answerText, suggest: Rating.Again });
     const nameInput = (onSubmit: (v: string) => void) => answerInput({
       placeholder: "Name (last name is fine)", onSubmit, onSkip: () => skip(m.name),
-      instant: (v) => matcher.isMatch(v, m),
+      instant: (v) => matcher.isExact(v, m),
     });
-    const seatInput = (onSubmit: (v: string) => void) => answerInput({
-      placeholder: m.chamber === "senate" ? "State, e.g. TX" : "District, e.g. TX-35", onSubmit, width: "260px",
+    const seatInput = (onSubmit: (v: string) => boolean | void) => answerInput({
+      placeholder: m.chamber === "senate" ? "State, e.g. TX or Texas" : "District, e.g. TX-35", onSubmit, width: "260px",
+      invalidHint: m.chamber === "senate" ? "Type a state, like MD or Maryland." : "Type a district like MD-03 (or Maryland 3). At-large: WY-AL.",
       onSkip: () => skip(m.chamber === "senate" ? seatLabel(m) : seatId(m)),
       // instant only once the number is unambiguous ("TX-3" could still become "TX-35")
       instant: (v) => {
-        const p = parseSeat(v, validStates);
+        const p = parseSeat(v, validStates, data.stateNames);
         if (!p || p.state !== m.state) return false;
         if (m.chamber === "senate") return true;
         return p.district === (m.district ?? 0) && (/\d\d$|AL$/i.test(v.trim()) || (m.district ?? 0) >= 10);
@@ -133,12 +134,13 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
       if (given && given.id !== m.id) recordConfusion(m.id, given.id);
       finishExact(false, m.name, given?.name ?? v);
     };
-    const checkSeat = (v: string) => {
-      const p = parseSeat(v, validStates);
-      if (!p) return false;
-      if (m.chamber === "senate") return finishExact(p.state === m.state, seatLabel(m), p.state);
+    const checkSeat = (v: string): boolean => {
+      const p = parseSeat(v, validStates, data.stateNames);
+      if (!p) return false; // unreadable: answer box stays open with a format hint
+      if (m.chamber === "senate") { finishExact(p.state === m.state, seatLabel(m), p.state); return true; }
       const exact = p.state === m.state && (p.district ?? 0) === (m.district ?? 0);
       finishExact(exact, seatId(m), p.district === null ? p.state : seatId({ state: p.state, district: p.district }), !exact && p.state === m.state);
+      return true;
     };
     const nameTitle = (eyebrow: string) => h("div.stack", { style: "gap:4px" }, h("span.eyebrow", eyebrow), promptName(m));
     const seatTitle = () => h("div.row", { style: "gap:10px;align-items:center" }, h("div.prompt-name.code", seatLabel(m)), roleChip(m));
@@ -153,11 +155,11 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
         view = h("div.stack", { style: "max-width:420px" }, h("span.eyebrow", "Who is this?"), photo(m, "photo big"), h("div", roleChip(m)), nameInput(checkName));
         break;
       case "name->district":
-        view = h("div.stack", { style: "max-width:520px" }, nameTitle(m.chamber === "senate" ? "Which state?" : "Which district?"), seatInput((v) => { checkSeat(v); }));
+        view = h("div.stack", { style: "max-width:520px" }, nameTitle(m.chamber === "senate" ? "Which state?" : "Which district?"), seatInput((v) => checkSeat(v)));
         break;
       case "shape->district":
         view = h("div.grid-2", promptMap(data, m, { silhouette: true }),
-          h("div.stack", h("span.eyebrow", "Which district is this shape?"), h("div", roleChip(m)), seatInput((v) => { checkSeat(v); })));
+          h("div.stack", h("span.eyebrow", "Which district is this shape?"), h("div", roleChip(m)), seatInput((v) => checkSeat(v))));
         break;
       case "senator->class":
         view = h("div.stack", nameTitle("Which Senate class?"),

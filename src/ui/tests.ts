@@ -162,8 +162,11 @@ function runQuiz(root: HTMLElement, ctx: Ctx, o: QuizOpts) {
         h("div.row", h("span.small.muted", "Class"), clsSeg),
         answerInput({
           id: "ans-state", placeholder: "State, e.g. TX", width: "200px", onSkip: skip,
+          invalidHint: "Type a state, like MD or Maryland.",
           onSubmit: (v) => {
-            const st = v.toUpperCase();
+            const parsed = parseSeat(v, validStates, data.stateNames);
+            if (!parsed) return false;
+            const st = parsed.state;
             const score = st === m.state ? (cls === m.senateClass ? 100 : 60) : 0;
             reveal(m, score, `${st}${cls ? ` · Class ${roman(cls)}` : " · no class picked"}`);
           },
@@ -173,13 +176,14 @@ function runQuiz(root: HTMLElement, ctx: Ctx, o: QuizOpts) {
     }
     body.replaceChildren(prompt, answerInput({
       id: "ans-seat", placeholder: "e.g. TX-35 or WY-AL", width: "240px", onSkip: skip,
+      invalidHint: "Type a district like MD-03 (or Maryland 3). At-large: WY-AL.",
       instant: (v) => {
-        const p = parseSeat(v, validStates);
+        const p = parseSeat(v, validStates, data.stateNames);
         return !!p && p.state === m.state && p.district === (m.district ?? 0) && (/\d\d$|AL$/i.test(v.trim()) || (m.district ?? 0) >= 10);
       },
       onSubmit: (v) => {
-        const p = parseSeat(v, validStates);
-        if (!p) return reveal(m, 0, v);
+        const p = parseSeat(v, validStates, data.stateNames);
+        if (!p) return false; // unreadable: keep the box open
         const exact = p.state === m.state && (p.district ?? 0) === (m.district ?? 0);
         const score = exact ? 100 : p.state === m.state ? 40 : 0;
         reveal(m, score, p.district === null ? p.state : seatId({ state: p.state, district: p.district }));
@@ -208,8 +212,8 @@ function runQuiz(root: HTMLElement, ctx: Ctx, o: QuizOpts) {
     const box = answerInput({
       id: "ans-name", placeholder: "Name (last name is fine)",
       onSkip: () => reveal(m, 0, "I don't know"),
-      // instant feedback: the moment what you've typed is right, it counts
-      instant: (v) => matcher.isMatch(v, m),
+      // instant feedback: an exactly-right name counts once you pause typing
+      instant: (v) => matcher.isExact(v, m),
       // names only: showing districts in the list would give the answer away
       suggest: hard ? undefined : (v) => matcher.suggest(v, 6).map((x) => x.name),
       onSubmit: (v) => {
