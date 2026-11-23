@@ -33,6 +33,16 @@ export interface Member {
   caucuses: { code: string; name: string; kind: "ideological" | "identity" }[];
   /** For independents: the party they caucus with. */
   partyCaucus?: "D" | "R";
+  /** 2026 winner's party differs from the party that held the seat going in. */
+  seatFlipped: boolean;
+  /** e.g. "Red to Blue, flipped it", "Frontline incumbent on NRCC's target list, survived"; null if none. */
+  raceRole: string | null;
+  /** Party committee lists this member or seat was on in 2026. */
+  targeting: { committee: string; program: string; dateAdded: string | null }[];
+  /** Issue PACs that backed them, e.g. ["Club for Growth PAC", "Fairshake"]. */
+  issuePacSupport: string[];
+  /** Cycle they were on the DCCC's Red to Blue list (e.g. 2026). */
+  redToBlue?: number;
   war: WarPoint[];
   warTrajectory: "rising" | "falling" | "steady" | "volatile" | "single" | null;
   fundraising?: { cycle: number; receipts: number; cashOnHand: number; disbursements: number };

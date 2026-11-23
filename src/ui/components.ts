@@ -29,6 +29,33 @@ export function promptName(m: Member, text: string = m.name): HTMLElement {
   return h("div.row", { style: "gap:10px;align-items:center" }, h("div.prompt-name", text), roleChip(m));
 }
 
+const PROGRAM_LABEL: Record<string, string> = {
+  "DCCC|Red to Blue": "DCCC Red to Blue", "DCCC|Frontline": "DCCC Frontline", "DCCC|Districts in Play": "DCCC Districts in Play",
+  "NRCC|MAGA Majority": "NRCC MAGA Majority", "NRCC|Patriot Program": "NRCC Patriot Program", "NRCC|Target list": "NRCC target list",
+};
+
+/** "2026 race": how they won (raceRole), whether the seat flipped, which lists targeted it, PAC backing. */
+export function raceSection(m: Member): HTMLElement | null {
+  const lists = (m.targeting ?? []).map((t) => PROGRAM_LABEL[`${t.committee}|${t.program}`] ?? `${t.committee} ${t.program}`);
+  const pacs = m.issuePacSupport ?? [];
+  if (!m.raceRole && !m.seatFlipped && !lists.length && !pacs.length) return null;
+  const flip = m.seatFlipped
+    ? h("span.flip", { style: `--c:${PARTY_VAR[m.party]}`, title: "The winner's party differs from the party that held the seat" }, `Flipped to ${m.party === "D" ? "Democrats" : m.party === "R" ? "Republicans" : "an independent"}`)
+    : null;
+  return h("div.stack", { style: "gap:8px" },
+    h("div.eyebrow", "2026 race"),
+    m.raceRole || flip ? h("div.row", { style: "gap:8px" }, m.raceRole ? h("b", m.raceRole) : null, flip) : null,
+    lists.length ? h("div.chips", ...lists.map((l) => h("span.caucus", l))) : null,
+    pacs.length ? h("p.small", h("span.muted", "Backed by: "), pacs.join(", ")) : null);
+}
+
+/** Flag for members the DCCC put on its Red to Blue list (top challengers in GOP-held seats). */
+export function redToBlueChip(m: Member): HTMLElement | null {
+  if (!m.redToBlue) return null;
+  return h("span.r2b", { title: `On the DCCC's Red to Blue list for ${m.redToBlue}: a top Democratic challenger in a Republican-held or competitive seat` },
+    `Red to Blue ’${String(m.redToBlue).slice(2)}`);
+}
+
 export function partyChip(p: Party): HTMLElement {
   return h(`span.party.${p}`, PARTY_NAME[p]);
 }
@@ -123,7 +150,7 @@ export function revealCard(data: AppData, m: Member, opts: { showMnemonic?: bool
       photo(m),
       h("div",
         h("div.name", m.name),
-        h("div.meta", roleChip(m), partyChip(m.party), h("span.code", seatLabel(m)), h("span", since)))),
+        h("div.meta", roleChip(m), partyChip(m.party), redToBlueChip(m), h("span.code", seatLabel(m)), h("span", since)))),
     h("div.grid-2", { style: "grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap:14px; align-items:start" },
       h("div", { style: "max-width:220px" }, districtMini(data, m.state, { highlight: m.chamber === "house" ? seatId(m) : m.state, color: PARTY_VAR[m.party], size: 220 })),
       h("div.stack", { style: "gap:8px" },
@@ -131,6 +158,7 @@ export function revealCard(data: AppData, m: Member, opts: { showMnemonic?: bool
         h("div.chips", ...m.districtCities.map((c) => h("span", c))),
         m.districtCounties.length ? h("p.small.muted", m.districtCounties.slice(0, 4).join(", ")) : null)),
     leanMeter(m),
+    raceSection(m),
     caucusRow(m),
     h("div.stats",
       h("div.stat", h("span.k", m.last2Way ? `${m.last2Way.year} two-way` : "Last two-way"),

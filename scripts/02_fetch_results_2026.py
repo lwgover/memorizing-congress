@@ -52,6 +52,8 @@ def main() -> None:
                 "seat": key, "chamber": r["chamber"], "state": r["state"],
                 "district": r["district"], "senate_class": r["senate_class"],
                 "incumbent_name": r["incumbent_name"],
+                "result_text": r.get("result_text"),
+                "outcome": r.get("outcome"),
                 "called": w is not None,
                 "winner_name": w["name"] if w else None,
                 "winner_wiki_title": w["wiki_title"] if w else None,

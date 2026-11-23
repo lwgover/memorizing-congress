@@ -139,7 +139,32 @@ memorizing-congress/
 - Pull after the post-general reports are filed. Rerun at year-end, since 2026 totals will keep moving until the final reports for the cycle are in.
 - API key lives in a local `.env`, never committed.
 
-### 4.5 `members.json` schema
+### 4.5 2026 targeting lists
+
+Saved in `data/targeting_2026/` (see its README for columns, totals and gaps):
+
+- `party_committee_lists.csv`: DCCC Red to Blue, Frontline, Districts in Play; NRCC MAGA Majority, Patriot Program, target list. Every row has a source URL, date added, and `active`/`removed` status.
+- `issue_pac_lists.csv`: Club for Growth PAC (complete), EMILYs List, New Democrat Coalition Action Fund, Blue Dog PAC, Fairshake (partial). LCV Action Fund, United Democracy Project (AIPAC) and Leading the Future still need pulling; the README says how (FEC Schedule E for the spending-based groups).
+
+**No race ratings or PVI.** Don't pull Cook, Sabato or Inside Elections ratings or Cook PVI into the site. Use our own numbers (Kamala 2-way, 2-way results, WAR) instead.
+
+Join to members on `district` (Senate rows use `XX-SEN`), then derive two fields per member:
+
+**`seatFlipped`** (boolean): the 2026 winner's party differs from the party that held the seat going into the election. For districts in redrawn states, compare against the incumbent who ran in (or represented most of) the new district; put any judgment calls in `data/overrides/seat_flipped.csv`.
+
+**`raceRole`** (string, shown on the reveal screen and usable as a quiz card). Rules, checked in order:
+
+| Condition | Label example |
+|---|---|
+| Won as a challenger on Red to Blue / MAGA Majority and the seat flipped | "Red to Blue, flipped it" / "MAGA Majority, flipped it" |
+| Won an open seat that was on the other party's target list | "Won a targeted open seat (NRCC target list)" |
+| Incumbent on the other party's target list who won | "On NRCC's target list, survived" / "On DCCC's Districts in Play, survived" |
+| Incumbent on own party's protection list (Frontline / Patriot) who won | "Frontline incumbent, held on" / "Patriot Program incumbent, held on" |
+| None of the above | `null` (don't show) |
+
+A member can match more than one row (e.g. Frontline and on the NRCC target list); combine them: "Frontline incumbent on NRCC's target list, survived". Issue PAC backing is shown as a separate line ("Backed by: Club for Growth, Fairshake"), not folded into `raceRole`.
+
+### 4.6 `members.json` schema
 
 ```ts
 interface Member {
@@ -165,6 +190,10 @@ interface Member {
   war: { year: number; value: number }[];      // member perspective
   warTrajectory: "rising" | "falling" | "steady" | "volatile" | "single";
   fundraising?: { cycle: 2026; receipts: number; cashOnHand: number; disbursements: number };
+  seatFlipped: boolean;
+  raceRole: string | null;     // see 4.5
+  targeting: { committee: string; program: string; dateAdded: string | null }[];
+  issuePacSupport: string[];   // e.g. ["Club for Growth PAC", "Fairshake"]
   funFacts: string[];
 }
 ```
@@ -383,6 +412,7 @@ The data pipeline runs locally and commits the outputs in `public/data/`. Hostin
 | M4 | Tier 2 cards + mastery map | Faces, party, shapes, cities |
 | M5 | Tier 3 data + closeness cards | Kamala (2024 lines), 2-way results, FEC 2026 receipts, committees |
 | M5b | Fill Kamala for redrawn districts | No `pending` values left in `members.json` |
+| M5c | Targeting lists + race role | `seatFlipped` and `raceRole` set for every House member; issue PAC gaps filled per `data/targeting_2026/README.md` |
 | M6 | Backlog games, polish | Silhouette, Higher or Lower |
 | M7 | Switch to 120th committees | Flip config, rerun pipeline |
 
@@ -395,6 +425,8 @@ The data pipeline runs locally and commits the outputs in `public/data/`. Hostin
 3. **Repo visibility:** public is fine for photos and data, but mnemonics should live only in localStorage/exports.
 
 ### Decided
+
+- Targeting: all DCCC and NRCC lists plus the issue PACs, saved in `data/targeting_2026/`. Derive `raceRole` and `seatFlipped`. No Cook/Sabato/Inside Elections ratings or PVI.
 
 - Hometown/birthplace: cut.
 - Fundraising: total receipts, 2026 two-year cycle, from the FEC.

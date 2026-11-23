@@ -1,12 +1,12 @@
 # members.json build
 
-_Generated 2026-11-23T04:48:25Z_
+_Generated 2026-11-23T17:02:51Z_
 
 ## Errors (0)
 
 _none_
 
-## Coverage (11)
+## Coverage (15)
 
 - members: 538
 - pending_seats: 3
@@ -15,6 +15,10 @@ _none_
 - kamala2Way: 107
 - last2Way: 300
 - caucuses: 297
+- redToBlue: 33
+- seatFlipped: 64
+- raceRole: 86
+- issuePacSupport: 163
 - fundraising: 6
 - committees: 407
 - funFacts: 0

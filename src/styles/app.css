@@ -246,3 +246,10 @@ th { font-size: 12px; color: var(--muted); font-weight: 600; }
 
 .seg.seg-links a { padding: 5px 12px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--muted); text-decoration: none; }
 .seg.seg-links a[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+/* DCCC Red to Blue flag: a small red-to-blue swatch + label */
+.r2b { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 2px 8px 2px 4px; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
+.r2b::before { content: ""; width: 16px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--rep), var(--dem)); }
+
+.flip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; color: var(--c); background: color-mix(in srgb, var(--c) 10%, transparent); }
+.flip::before { content: "\21BB"; font-size: 13px; }

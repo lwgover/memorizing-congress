@@ -11,7 +11,7 @@ import { isDue, newCard, type StoredCard } from "./scheduler";
 export type CardType =
   | "district->name" | "name->district" | "senator->class"
   | "face->name" | "name->face" | "name->party"
-  | "war" | "war-trajectory" | "kamala-2way" | "last-2way" | "first-elected" | "fundraising" | "committees";
+  | "war" | "war-trajectory" | "kamala-2way" | "last-2way" | "first-elected" | "fundraising" | "committees" | "race-role";
 
 export const TIER3_FACTS: { type: CardType; label: string }[] = [
   { type: "war", label: "WAR (latest race)" },
@@ -21,6 +21,7 @@ export const TIER3_FACTS: { type: CardType; label: string }[] = [
   { type: "first-elected", label: "First election year" },
   { type: "fundraising", label: "2026 fundraising" },
   { type: "committees", label: "Committees" },
+  { type: "race-role", label: "2026 race (targeting and flips)" },
 ];
 
 export const CARD_LABEL: Record<CardType, string> = {
@@ -37,6 +38,7 @@ export const CARD_LABEL: Record<CardType, string> = {
   "first-elected": "First elected",
   "fundraising": "2026 fundraising",
   "committees": "Committees",
+  "race-role": "2026 race",
 };
 
 export function cardId(memberId: string, type: CardType): string {
@@ -71,6 +73,7 @@ export function tier3Types(m: Member): CardType[] {
   if (on["first-elected"]) t.push("first-elected");
   if (on["fundraising"] && m.fundraising) t.push("fundraising");
   if (on["committees"] && m.committees.length) t.push("committees");
+  if (on["race-role"] && m.raceRole) t.push("race-role");
   return t;
 }
 

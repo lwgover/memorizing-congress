@@ -103,6 +103,9 @@ def main() -> None:
                     "PSC": "Problem Solvers Caucus", "BDC": "Blue Dog Coalition", "NDC": "New Democrat Coalition",
                     "CPC": "Progressive Caucus", "CBC": "Congressional Black Caucus", "CHC": "Congressional Hispanic Caucus",
                     "CHCo": "Congressional Hispanic Conference", "CAPAC": "Asian Pacific American Caucus"}
+    # 2026 targeting lists (12): seat flips, race role, committee lists, issue PAC backing
+    tg = opt_csv(INTERIM / "targeting.csv")
+    targeting = tg.set_index("bioguide_id") if len(tg) else tg
     caucus_df = opt_csv(INTERIM / "caucuses.csv")
     member_caucuses: dict[str, list[dict]] = {}
     party_caucus: dict[str, str] = {}
@@ -192,6 +195,11 @@ def main() -> None:
                           "opponentParty": (r.last2way_opponent_party if isinstance(r.last2way_opponent_party, str) and r.last2way_opponent_party else None)}),
             "caucuses": sorted(member_caucuses.get(bid, []), key=lambda c: (c["kind"] != "ideological", c["name"])),
             **({"partyCaucus": party_caucus[bid]} if bid in party_caucus else {}),
+            "seatFlipped": bool(targeting.loc[bid].seat_flipped) if len(targeting) and bid in targeting.index else False,
+            "raceRole": (targeting.loc[bid].race_role if len(targeting) and bid in targeting.index and isinstance(targeting.loc[bid].race_role, str) else None),
+            "targeting": json.loads(targeting.loc[bid].targeting) if len(targeting) and bid in targeting.index else [],
+            "issuePacSupport": json.loads(targeting.loc[bid].issue_pac_support) if len(targeting) and bid in targeting.index else [],
+            **({"redToBlue": 2026} if len(targeting) and bid in targeting.index and bool(targeting.loc[bid].red_to_blue) else {}),
             "war": json.loads(w.war) if w is not None else [],
             "warTrajectory": (w.war_trajectory if w is not None and isinstance(w.war_trajectory, str) else None),
             "funFacts": fun.get(bid, []) or [],
@@ -246,6 +254,10 @@ def main() -> None:
         "kamala2Way": count(lambda x: x["kamala2Way"] is not None),
         "last2Way": count(lambda x: x["last2Way"]),
         "caucuses": count(lambda x: x["caucuses"]),
+        "redToBlue": count(lambda x: "redToBlue" in x),
+        "seatFlipped": count(lambda x: x["seatFlipped"]),
+        "raceRole": count(lambda x: x["raceRole"]),
+        "issuePacSupport": count(lambda x: x["issuePacSupport"]),
         "fundraising": count(lambda x: "fundraising" in x),
         "committees": count(lambda x: x["committees"]),
         "funFacts": count(lambda x: x["funFacts"]),

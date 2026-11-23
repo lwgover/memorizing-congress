@@ -78,6 +78,18 @@ def parse_candidates(cell: str) -> list[dict]:
     return out
 
 
+OUTCOME_RE = re.compile(r"(Democratic|Republican|Independent)\s+(gain|hold)")
+RESULT_RE = re.compile(r"(Incumbent [^.<\n|]*|New (?:seat|member)[^.<\n|]*|Interim appointee[^.<\n|]*)")
+
+
+def row_outcome(chunk: str) -> dict:
+    """'Incumbent lost re-election' + 'Democratic gain' style text from a results row."""
+    o = OUTCOME_RE.search(chunk)
+    r = RESULT_RE.search(chunk)
+    return {"result_text": re.sub(r"\[\[[^\]|]*\|([^\]]*)\]\]", r"\1", r.group(1)).strip() if r else None,
+            "outcome": o.group(0) if o else None}
+
+
 def parse_house(text: str) -> list[dict]:
     rows = []
     for chunk in text.split("\n|-"):
@@ -90,7 +102,7 @@ def parse_house(text: str) -> list[dict]:
         lines = chunk.split("\n")
         incumbent = next((parse_sortname(l) for l in lines[1:6] if "sortname" in l.lower()), None)
         cands = parse_candidates(chunk)
-        rows.append(dict(chamber="house", state=st, district=district, senate_class=None,
+        rows.append(dict(chamber="house", state=st, district=district, senate_class=None, **row_outcome(chunk),
                          incumbent_name=incumbent, candidates=cands))
     return rows
 
@@ -110,7 +122,7 @@ def parse_senate(text: str, year: int = 2026, regular_class: int = 2) -> list[di
         lines = [l for l in chunk.strip().split("\n")[1:] if l.strip().startswith("|")]
         inc_line = lines[0] if lines else ""
         incumbent = parse_sortname(inc_line) or clean_link(inc_line.lstrip("| "))[0]
-        rows.append(dict(chamber="senate", state=state, district=None, senate_class=cls,
+        rows.append(dict(chamber="senate", state=state, district=None, senate_class=cls, **row_outcome(chunk),
                          incumbent_name=incumbent, candidates=parse_candidates(chunk)))
     return rows
 

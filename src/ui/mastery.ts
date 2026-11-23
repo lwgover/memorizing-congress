@@ -5,7 +5,7 @@ import type { Ctx } from "../main";
 import { UsMap } from "../map/usMap";
 import { masteryLevel } from "../srs/cards";
 import { getState } from "../store";
-import { PARTY_VAR, leanMeter, partyChip, photo, roleChip } from "./components";
+import { PARTY_VAR, leanMeter, partyChip, photo, raceSection, redToBlueChip, roleChip } from "./components";
 import { h } from "./dom";
 
 type Lens = "mastery" | "party" | "harris";
@@ -76,9 +76,10 @@ export function masteryView(root: HTMLElement, { data }: Ctx) {
     const lvl = masteryLevel(m);
     const sens = data.senatorsByState.get(m.state) ?? [];
     info.replaceChildren(
-      h("div.who-row", photo(m), h("div", h("div.name", m.name), h("div.meta", roleChip(m), partyChip(m.party), h("span.code", seatId(m))))),
+      h("div.who-row", photo(m), h("div", h("div.name", m.name), h("div.meta", roleChip(m), partyChip(m.party), redToBlueChip(m), h("span.code", seatId(m))))),
       h("p.small.muted", lvl === null ? "Not introduced yet." : `Mastery ${lvl} of 5.`),
       leanMeter(m),
+      ...[raceSection(m)].filter((x): x is HTMLElement => x !== null),
       ...(sens.length ? [h("p.small", h("span.muted", "Senators: "), sens.map((s) => `${s.name} (${s.party}, ${seatLabel(s).split(" · ")[1]})`).join(" · "))] : []));
   }
 }

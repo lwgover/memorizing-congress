@@ -192,6 +192,16 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
         view = h("div.stack", { style: "max-width:420px" }, nameTitle("Which one is them?"), grid, skipButton(() => skip(m.name)));
         break;
       }
+      case "race-role": {
+        // their race role plus three others (same party first, so it isn't a party giveaway)
+        const others = [...new Set(shuffle(data.members.filter((x) => x.raceRole && x.raceRole !== m.raceRole), Math.random)
+          .sort((a, b) => Number(b.party === m.party) - Number(a.party === m.party))
+          .map((x) => x.raceRole!))].slice(0, 3);
+        const opts = shuffle([m.raceRole!, ...others], Math.random);
+        view = h("div.stack", { style: "max-width:560px" }, nameTitle("How did their 2026 race go?"),
+          buttons(opts.map((label) => [label, () => finishExact(label === m.raceRole, m.raceRole!, label)]), () => skip(m.raceRole!)));
+        break;
+      }
       case "committees": {
         const truth = new Set(m.committees.map((c) => c.name));
         const pool = [...new Set(data.members.filter((x) => x.chamber === m.chamber).flatMap((x) => x.committees.map((c) => c.name)))].filter((c) => !truth.has(c));

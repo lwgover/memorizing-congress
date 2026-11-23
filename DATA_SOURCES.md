@@ -27,6 +27,7 @@ Update the **Status** table and append to the **Update log** whenever new data l
 | Committees | 407 / 538 (119th) | congress-legislators | New members get assignments with the 120th (flip `COMMITTEE_CONGRESS`) |
 | First elected / years | 538 / 538 | Derived from terms + `first_elected.csv` | Done |
 | Caucuses | 297 / 538 members (11 caucuses) + independents' party caucus | Wikipedia caucus articles + congress-legislators | Main Street has no current list on Wikipedia; new members join in January |
+| 2026 targeting | 64 seats flipped · 86 race roles · 97 members on a committee list · 163 with issue PAC backing (33 Red to Blue) | `data/targeting_2026/` (team-compiled) + Wikipedia gain/hold | Issue PAC gaps: see `data/targeting_2026/README.md` |
 | Fun facts | 0 | `fun_facts.yaml` (hand-written) | Write them |
 
 ---
@@ -45,6 +46,9 @@ Update the **Status** table and append to the **Update log** whenever new data l
 | 8 | `08_join_results.py` | `data/interim/results.csv`, `reports/results.md` |
 | 9 | `09_fetch_fec.py` | `data/interim/fec.csv`, `reports/fec.md` |
 | 10 | `10_fetch_caucuses.py` | `data/interim/caucuses.csv`, `reports/caucuses.md` |
+| 12a | `12a_fetch_lcv.py` | `data/targeting_2026/generated/lcv_action_fund.csv` |
+| 12b | `12b_fetch_schedule_e.py` | `data/targeting_2026/generated/fec_schedule_e.csv` (needs `FEC_API_KEY`) |
+| 12 | `12_targeting.py` | `data/interim/targeting.csv`, `reports/targeting.md` |
 | 99 | `99_build_members_json.py` | `public/data/{members,committees,pending_seats,meta}.json`, `reports/members.md` |
 
 Settings live in `scripts/config.py` (`COMMITTEE_CONGRESS`, `COUNT_COURT_MAPS`, simplification tolerance, city counts, and so on).
@@ -188,7 +192,45 @@ Similar technical changes in IL, MO, and SC (≤ 225 people) are already treated
 
 **Party caucus for independents:** from congress-legislators' `caucus` field on the latest term (Sanders, King → Democrats). `data/overrides/party_caucus.csv` covers new independents.
 
-## 9. Committees, service, aliases, fun facts
+## 9. 2026 targeting lists, seat flips, race role
+
+**Inputs:** the team's lists in `data/targeting_2026/` (SCAFFOLD 4.5; columns, totals and gaps in its README).
+- **Party committees:** DCCC Red to Blue, Frontline, Districts in Play; NRCC MAGA Majority, Patriot Program, target list.
+- **Issue PACs:** Club for Growth, EMILYs List, New Dem Action Fund, Blue Dog PAC, Fairshake.
+- Only `active` rows count. `removed` rows are listed in the report.
+
+**Joins (`12_targeting.py`):**
+- **Seat lists** (Districts in Play, NRCC target list) describe a seat, so they join on `district` (2026 lines).
+- **Candidate lists** (Red to Blue, MAGA Majority, Frontline, Patriot, issue PACs) name a person, so they join on state + chamber + last name. A losing challenger never tags the winner, and pre-redistricting district numbers in some PAC rows don't matter. Ties on last name are broken by district (Johnny vs. Sylvia Garcia).
+- **About 89 candidate rows match nobody.** These are people who lost (e.g. Patriot incumbents Lawler and Kiggans, Club for Growth's Paxton). They're listed in the report.
+
+**`seatFlipped`:**
+1. `data/overrides/seat_flipped.csv` (`seat, flipped, note`) wins.
+2. Otherwise, Wikipedia's explicit "Democratic gain" / "Republican hold" on the results row.
+3. Otherwise, "Incumbent re-elected" means held.
+4. Otherwise, the party of the seat's 119th-Congress holder vs. the winner. These are listed in the report for review; the current six are all correct holds.
+- Senators not on the 2026 ballot are `false`.
+- The incumbent's result ("re-elected", "lost re-election", "retired", "New member elected") is captured in step 02 as `result_text`. It decides incumbent vs. challenger vs. open seat.
+
+**`raceRole`** (SCAFFOLD 4.5, checked in order, matches combined):
+1. Won as a challenger on Red to Blue / MAGA Majority and the seat flipped → "Red to Blue, flipped it".
+2. Won an open seat on the other party's seat list → "Won a targeted open seat (NRCC target list)".
+3. Incumbent who won while on the other party's seat list and/or their own protection list (Frontline / Patriot) → "Frontline incumbent on NRCC's target list, survived", "On DCCC's Districts in Play, survived", "Frontline incumbent, held on".
+4. Otherwise `null`.
+
+**On the site:** a "2026 race" block on the answer card and in the mastery map panel (role, a "Flipped to …" badge, list chips, "Backed by: …"), a "Red to Blue '26" chip, and a Tier 3 "2026 race" quiz card.
+
+**No race ratings or PVI:** nothing from Cook, Sabato or Inside Elections is used.
+
+**Filling the README's gaps** (pipeline-generated files in `data/targeting_2026/generated/`, same columns as the team's CSVs; the team's files are never edited):
+- **LCV Action Fund (`12a`):** lcv.org/2025-2026-endorsements/. **140 endorsements** (125 House, 15 Senate), of whom 128 are seated members. The page serves the same full list regardless of `?result_page`, so the README's "192" couldn't be reproduced; it may count something else. Worth a manual look.
+- **FEC Schedule E (`12b`):** every 2026 independent expenditure by Fairshake / Protect Progress / Defend American Jobs, United Democracy Project, Leading the Future / Think Big / American Mission, Club for Growth Action, LCV Victory Fund, and Women Vote!. It pages through `/schedules/schedule_e/`, sums per candidate and support/oppose, and skips memo lines.
+  - **Only support counts toward "Backed by"**; spending *against* someone is listed in the report.
+  - **Status: Fairshake's own committee only** (6 supported at about $1M each, 3 opposed). The rest needs `FEC_API_KEY` in `.env`, since the public DEMO_KEY is about 10 requests an hour. Rerun `12b`, then `12` and `99`.
+  - If a committee name search picks the wrong FEC committee, pin its ID in `data/overrides/fec_committees.csv`.
+- **Still manual:** a newer NRCC Patriot Program roster, and the rest of EMILYs List / New Dem / Blue Dog (see the targeting README).
+
+## 10. Committees, service, aliases, fun facts
 
 - **Committees**: `committee-membership-current.yaml` + `committees-current.yaml`, full committees only (4-letter codes). Roles come from titles (Chair, Ranking Member, Vice Chair). The 119th applies until the 120th organizes; then set `COMMITTEE_CONGRESS = 120` and rerun 01 + 99. New members have none until then.
 - **First elected / years**: derived from terms. A January start in an odd year is a regular term (elected the previous year). A special election counts as the year sworn in. An appointment counts as the next election. Corrections go in `data/overrides/first_elected.csv` (`bioguide_id, first_elected_year, years_in_congress, note`), seeded with Barrasso, Markey (a source-data quirk), Meeks, Bonamici, Menefee, and Schatz.
@@ -204,6 +246,8 @@ Changed:
 - `last2Way` and `warTrajectory` can be `null`.
 - `last2Way` adds `opponent` and `opponentParty` (top opponent in that race). The site uses them to place the race on the red-to-blue "How blue" meter, so a D-vs-D race isn't drawn as a Democratic landslide.
 - `caucuses` (list of `{code, name, kind}`) and `partyCaucus` (independents only).
+- `seatFlipped`, `raceRole`, `targeting` (`{committee, program, dateAdded}`), `issuePacSupport` (SCAFFOLD 4.5/4.6).
+- `redToBlue`: `2026` for members on the DCCC's Red to Blue list (from the targeting lists). Absent otherwise.
 - `war[]` items carry `chamber`, `opponent` and `opponentParty`: WAR is always a two-candidate race, so the site shows every value with who they ran against (from the CSV's other column; `(Ind)` → `I`).
 - `kamala2WaySource` adds `statewide | missing | n/a`.
 
@@ -233,6 +277,8 @@ Inputs you supply go in `data/inputs/` (`pres_2024_by_cd119.csv`).
 
 Append newest first: date, what changed, and why.
 
+- **2026-11-23**: Filled targeting gaps: LCV Action Fund scrape (12a, 140 endorsements), FEC Schedule E step (12b; Fairshake committee done, rest awaits FEC_API_KEY). Issue PAC backing now covers 163 members.
+- **2026-11-23**: Added the team's 2026 targeting lists (new step 12): seatFlipped (64), raceRole (86), committee lists, issue PAC backing (50). Red to Blue now comes from these lists (33 members); the earlier dccc.org scrape (step 11) was retired.
 - **2026-11-22**: Added caucus memberships (new step 10) and the last race's opponent and party (08).
 - **2026-11-22**: WAR points now include the opponent's name and party (07 → members.json).
 - **2026-11-22**: Initial pipeline built. Roster from congress-legislators + Wikipedia (House rev 1387217115). 3 seats pending (LA-05, LA-06 runoffs; MN-01 recount). Census TIGER 2026 cd120 shapes. 148 districts flagged redrawn. WAR CSV 20261122 joined. Kamala statewide from FEC; district file pending. FEC partial (DEMO_KEY).

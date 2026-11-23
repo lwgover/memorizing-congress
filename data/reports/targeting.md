@@ -1,0 +1,244 @@
+# 2026 targeting lists, seat flips, race roles
+
+_Generated 2026-11-23T17:02:47Z_
+
+## Summary (5)
+
+- seats flipped: 64
+- members with a race role: 86
+- members on any list: 97
+- members with issue PAC support: 163
+- Red to Blue members: 33
+
+## Race roles (86)
+
+- AK-AL Nicholas J. Begich III: Patriot Program incumbent on DCCC's Districts in Play, survived
+- AL-02 Shomari Figures: Frontline incumbent on NRCC's target list, survived
+- AR-02 J. French Hill: On DCCC's Districts in Play, survived
+- AZ-01 Amish Shah: Red to Blue, flipped it
+- AZ-02 Elijah Crane: On DCCC's Districts in Play, survived
+- AZ-06 JoAnna Mendoza: Red to Blue, flipped it
+- CA-06 Richard Pan: Red to Blue, flipped it
+- CA-09 Josh Harder: On NRCC's target list, survived
+- CA-13 Adam Gray: Frontline incumbent on NRCC's target list, survived
+- CA-22 Randy Villegas: Red to Blue, flipped it
+- CA-27 George Whitesides: On NRCC's target list, survived
+- CA-45 Derek Tran: Frontline incumbent on NRCC's target list, survived
+- CA-47 Dave Min: On NRCC's target list, survived
+- CA-48 Marni von Wilpert: Red to Blue, flipped it
+- CO-03 Jeff Hurd: On DCCC's Districts in Play, survived
+- CO-05 Jessica Killin: Red to Blue, flipped it
+- CO-08 Manny Rutinel: Red to Blue, flipped it
+- CT-05 Jahana Hayes: Frontline incumbent, held on
+- FL-07 Ryan Elijah: Won a targeted open seat (DCCC Districts in Play)
+- FL-09 Darren Soto: Frontline incumbent on NRCC's target list, survived
+- FL-12 Gus M. Bilirakis: On DCCC's Districts in Play, survived
+- FL-13 Anna Paulina Luna: On DCCC's Districts in Play, survived
+- FL-14 Kathy Castor: Frontline incumbent on NRCC's target list, survived
+- FL-16 Sydney Gruters: Won a targeted open seat (DCCC Districts in Play)
+- FL-22 Pia Dandiya: Red to Blue, flipped it
+- FL-25 Jared Moskowitz: Frontline incumbent on NRCC's target list, survived
+- FL-27 Maria Elvira Salazar: On DCCC's Districts in Play, survived
+- IA-01 Christina Bohannan: Red to Blue, flipped it
+- IA-02 Lindsay James: Red to Blue, flipped it
+- IA-03 Sarah Trone Garriott: Red to Blue, flipped it
+- IN-01 Frank J. Mrvan: Frontline incumbent on NRCC's target list, survived
+- KS-02 Derek Schmidt: On DCCC's Districts in Play, survived
+- KY-06 Zach Dembo: Red to Blue, flipped it
+- ME-02 Paul LePage: MAGA Majority, flipped it
+- MI-01 Jack Bergman: On DCCC's Districts in Play, survived
+- MI-04 Sean McCann: Red to Blue, flipped it
+- MI-07 William Lawrence: Red to Blue, flipped it
+- MI-08 Kristen McDonald Rivet: Frontline incumbent on NRCC's target list, survived
+- MI-10 Christina Hines: Red to Blue, flipped it
+- MO-05 Emanuel Cleaver: On NRCC's target list, survived
+- MT-01 Sam Forstag: Red to Blue, flipped it
+- NC-01 Donald G. Davis: Frontline incumbent on NRCC's target list, survived
+- NC-11 Jamie Ager: Red to Blue, flipped it
+- NE-01 Mike Flood: On DCCC's Districts in Play, survived
+- NE-02 Denise Powell: Red to Blue, flipped it
+- NH-01 Stefany Shaheen: Won a targeted open seat (NRCC target list)
+- NJ-07 Rebecca Bennett: Red to Blue, flipped it
+- NJ-09 Nellie Pou: Frontline incumbent on NRCC's target list, survived
+- NM-02 Gabe Vasquez: Frontline incumbent on NRCC's target list, survived
+- NV-01 Dina Titus: Frontline incumbent on NRCC's target list, survived
+- NV-02 Teresa Benitez-Thompson: Red to Blue, flipped it
+- NV-03 Susie Lee: Frontline incumbent on NRCC's target list, survived
+- NV-04 Steven Horsford: Frontline incumbent on NRCC's target list, survived
+- NY-01 Nick LaLota: On DCCC's Districts in Play, survived
+- NY-03 Thomas R. Suozzi: Frontline incumbent on NRCC's target list, survived
+- NY-04 Laura Gillen: Frontline incumbent on NRCC's target list, survived
+- NY-17 Cait Conley: Red to Blue, flipped it
+- NY-19 Josh Riley: Frontline incumbent on NRCC's target list, survived
+- NY-21 Anthony Constantino: Won a targeted open seat (DCCC Districts in Play)
+- OH-01 Greg Landsman: Frontline incumbent on NRCC's target list, survived
+- OH-07 Brian Poindexter: Red to Blue, flipped it
+- OH-09 Marcy Kaptur: Frontline incumbent on NRCC's target list, survived
+- OH-13 Emilia Strong Sykes: Frontline incumbent on NRCC's target list, survived
+- OK-05 Stephanie I. Bice: On DCCC's Districts in Play, survived
+- OR-05 Janelle S. Bynum: Frontline incumbent, held on
+- PA-01 Bob Harvie: Red to Blue, flipped it
+- PA-07 Bob Brooks: Red to Blue, flipped it
+- PA-08 Paige Cognetti: Red to Blue, flipped it
+- PA-10 Janelle Stelson: Red to Blue, flipped it
+- SC-01 Nancy Lacore: Red to Blue, flipped it
+- TN-05 Charlie Hatcher: Won a targeted open seat (DCCC Districts in Play)
+- TN-09 Brent Taylor: Won a targeted open seat (DCCC Districts in Play)
+- TX-09 Leticia Gutierrez: Won a targeted open seat (NRCC target list)
+- TX-15 Bobby Pulido: Red to Blue, flipped it
+- TX-28 Henry Cuellar: Frontline incumbent on NRCC's target list, survived
+- TX-34 Vicente Gonzalez: Frontline incumbent on NRCC's target list, survived
+- TX-35 Johnny Garcia: Red to Blue, flipped it
+- VA-01 Shannon Taylor: Red to Blue, flipped it
+- VA-02 Elaine G. Luria: Red to Blue, flipped it
+- VA-05 John J. McGuire III: On DCCC's Districts in Play, survived
+- VA-06 Ben Cline: On DCCC's Districts in Play, survived
+- VA-07 Eugene Simon Vindman: Frontline incumbent on NRCC's target list, survived
+- WA-03 Marie Gluesenkamp Perez: Frontline incumbent on NRCC's target list, survived
+- WA-05 Michael Baumgartner: On DCCC's Districts in Play, survived
+- WI-01 Mitchell Berman: Red to Blue, flipped it
+- WI-03 Rebecca Cooke: Red to Blue, flipped it
+
+## Removed rows (ignored) (12)
+
+- DCCC Districts in Play: CA-40 Young Kim (R incumbent at listing) (Dropped by 2025-12-10 list (after California's new map))
+- DCCC Districts in Play: CA-41 Ken Calvert (R incumbent at listing) (Dropped by 2025-12-10 list (after California's new map))
+- DCCC Districts in Play: FL-15 Laurel Lee (R incumbent at listing) (Gone from the 2026-08-05 list (after Florida's new map))
+- DCCC Frontline: CA-09 Josh Harder (Not on the current Frontline page (checked 2026-11-23))
+- DCCC Frontline: CA-27 George Whitesides (Not on the current Frontline page (checked 2026-11-23))
+- DCCC Frontline: CA-47 Dave Min (Not on the current Frontline page (checked 2026-11-23))
+- DCCC Frontline: ME-02 Jared Golden (Golden not seeking reelection; not on current Frontline page)
+- DCCC Frontline: NY-22 John Mannion (Not on the current Frontline page (checked 2026-11-23))
+- DCCC Red to Blue: AZ-01 Marlene Galán-Woods (Lost primary to Amish Shah; not on current Red to Blue page)
+- DCCC Red to Blue: CA-22 Jasmeet Bains (Not on current Red to Blue page (Randy Villegas listed for CA-22))
+- DCCC Red to Blue: ME-02 Joe Baldacci (Not on current Red to Blue page (Matt Dunlap listed for ME-02))
+- NRCC MAGA Majority: NY-19 Peter Oberacker (Taken off MAGA Majority before 2026-09-08 (Roll Call))
+
+## Candidate rows not matched to a member (lost, or name mismatch) (103)
+
+- DCCC Red to Blue: AZ-02 Jonathan Nez (D)
+- DCCC Red to Blue: TN-05 Chaz Molder (D)
+- DCCC Red to Blue: FL-07 Bale Dalton (D)
+- DCCC Red to Blue: MN-01 Jake Johnson (D)
+- DCCC Red to Blue: FL-13 Leela Gray (D)
+- DCCC Red to Blue: ME-02 Matt Dunlap (D)
+- DCCC Red to Blue: VA-05 Tom Perriello (D)
+- DCCC Red to Blue: AK-AL Bill Hill (I)
+- DCCC Red to Blue: AR-02 Chris Jones (D)
+- DCCC Red to Blue: CO-03 Dwayne Romero (D)
+- DCCC Red to Blue: FL-27 Eliott Rodriguez (D)
+- DCCC Red to Blue: NY-21 Blake Gendebien (D)
+- DCCC Red to Blue: TN-09 Justin J. Pearson (D)
+- NRCC MAGA Majority: AZ-01 Jay Feely (R)
+- NRCC MAGA Majority: CA-13 Kevin Lincoln (R)
+- NRCC MAGA Majority: IA-02 Joe Mitchell (R)
+- NRCC MAGA Majority: NC-01 Laurie Buckhout (R)
+- NRCC MAGA Majority: NY-03 Mike LiPetri (R)
+- NRCC MAGA Majority: TX-28 Tano Tijerina (R)
+- NRCC MAGA Majority: TX-34 Eric Flores (R)
+- NRCC MAGA Majority: CA-48 Jim Desmond (R)
+- NRCC MAGA Majority: MT-01 Aaron Flint (R)
+- NRCC MAGA Majority: NE-02 Brinker Harding (R)
+- NRCC MAGA Majority: NM-02 Greg Cunningham (R)
+- NRCC MAGA Majority: NV-01 Carrie Buck (R)
+- NRCC MAGA Majority: NV-03 Marty O'Donnell (R)
+- NRCC MAGA Majority: OH-01 Eric Conroy (R)
+- NRCC MAGA Majority: WA-03 John Braun (R)
+- NRCC MAGA Majority: IN-01 Barb Regnitz (R)
+- NRCC MAGA Majority: MI-08 Amir Hassan (R)
+- NRCC MAGA Majority: MI-10 Mike Bouchard Jr. (R)
+- NRCC MAGA Majority: NH-01 Anthony DiLorenzo (R)
+- NRCC MAGA Majority: NY-04 Jeanine Driscoll (R)
+- NRCC MAGA Majority: OH-09 Derek Merrin (R)
+- NRCC MAGA Majority: TX-35 Carlos De La Cruz (R)
+- NRCC MAGA Majority: FL-09 Dan Green (R)
+- NRCC MAGA Majority: FL-14 Mike Beltran (R)
+- NRCC MAGA Majority: FL-22 Casey Askar (R)
+- NRCC MAGA Majority: FL-25 Scott Singer (R)
+- NRCC MAGA Majority: NC-11 Jennifer Balkcom (R)
+- NRCC Patriot Program: AZ-06 Juan Ciscomani (R)
+- NRCC Patriot Program: CA-22 David Valadao (R)
+- NRCC Patriot Program: CO-08 Gabe Evans (R)
+- NRCC Patriot Program: IA-01 Mariannette Miller-Meeks (R)
+- NRCC Patriot Program: IA-03 Zach Nunn (R)
+- NRCC Patriot Program: MI-07 Tom Barrett (R)
+- NRCC Patriot Program: NJ-07 Tom Kean Jr. (R)
+- NRCC Patriot Program: NY-17 Mike Lawler (R)
+- NRCC Patriot Program: PA-01 Brian Fitzpatrick (R)
+- NRCC Patriot Program: PA-07 Ryan Mackenzie (R)
+- NRCC Patriot Program: PA-08 Rob Bresnahan (R)
+- NRCC Patriot Program: PA-10 Scott Perry (R)
+- NRCC Patriot Program: VA-02 Jen Kiggans (R)
+- NRCC Patriot Program: WI-03 Derrick Van Orden (R)
+- Club for Growth PAC Endorsement: GA-SEN Mike Collins (R)
+- Club for Growth PAC Endorsement: TX-SEN Ken Paxton (R)
+- Club for Growth PAC Endorsement: MI-07 Tom Barrett (R)
+- Club for Growth PAC Endorsement: FL-14 Mike Beltran (R)
+- Club for Growth PAC Endorsement: MO-05 Rick Brattin (R)
+- Club for Growth PAC Endorsement: NV-02 David Flippo (R)
+- Club for Growth PAC Endorsement: TX-09 Alex Mealer (R)
+- Club for Growth PAC Endorsement: OH-09 Derek Merrin (R)
+- Club for Growth PAC Endorsement: LA-06 Blake Miguez (R)
+- Club for Growth PAC Endorsement: PA-10 Scott Perry (R)
+- EMILYs List Endorsement / Mission Majority: MI-01 Callie Barr (D)
+- EMILYs List Endorsement / Mission Majority: MN-08 Trina Swanson (D)
+- EMILYs List Endorsement / Mission Majority: VA-06 Beth Macy (D)
+- EMILYs List Endorsement / Mission Majority: WA-05 Carmela Conroy (D)
+- EMILYs List Endorsement / Mission Majority: CA-06 Lauren Babb Tomlinson (D)
+- EMILYs List Endorsement / Mission Majority: CA-01 Audrey Denney (D)
+- EMILYs List Endorsement / Mission Majority: CA-22 Jasmeet Bains (D)
+- EMILYs List Endorsement / Mission Majority: CO-08 Shannon Bird (D)
+- EMILYs List Endorsement / Mission Majority: PA-07 Carol Obando-Derstine (D)
+- New Democrat Coalition Action Fund Endorsement: TN-05 Chaz Molder (D)
+- New Democrat Coalition Action Fund Endorsement: AZ-01 Marlene Galán-Woods (D)
+- New Democrat Coalition Action Fund Endorsement: FL-07 Bale Dalton (D)
+- New Democrat Coalition Action Fund Endorsement: FL-13 Leela Gray (D)
+- New Democrat Coalition Action Fund Endorsement: MN-01 Jake Johnson (D)
+- New Democrat Coalition Action Fund Endorsement: AZ-02 Jonathan Nez (D)
+- New Democrat Coalition Action Fund Endorsement: CO-03 Dwayne Romero (D)
+- New Democrat Coalition Action Fund Endorsement: FL-27 Eliott Rodriguez (D)
+- New Democrat Coalition Action Fund Endorsement: MI-01 Callie Barr (D)
+- Blue Dog PAC Endorsement: CA-22 Jasmeet Bains (D)
+- Blue Dog PAC Endorsement: NY-21 Blake Gendebien (D)
+- Blue Dog PAC Endorsement: CO-03 Dwayne Romero (D)
+- Blue Dog PAC Endorsement: KS-02 Don Coover (D)
+- Blue Dog PAC Endorsement: FL-02 Amanda Marie Green (D)
+- Fairshake Incumbent slate ($1M tier): MI-04 Bill Huizenga (R)
+- Fairshake Incumbent slate ($1M tier): WI-01 Bryan Steil (R)
+- Fairshake Independent expenditures (Fairshake): WI-01 Bryan Steil (?)
+- Fairshake Independent expenditures (Fairshake): MI-04 Bill Huizenga (?)
+- LCV Action Fund Endorsement: AZ-02 Jonathan Nez (D)
+- LCV Action Fund Endorsement: CA-04 Mike Thompson (D)
+- LCV Action Fund Endorsement: CA-34 Jimmy Gomez (D)
+- LCV Action Fund Endorsement: CO-01 Diana DeGette (D)
+- LCV Action Fund Endorsement: FL-07 Bale Dalton (D)
+- LCV Action Fund Endorsement: MN-01 Jake Johnson (D)
+- LCV Action Fund Endorsement: NY-10 Dan Goldman (D)
+- LCV Action Fund Endorsement: NY-13 Adriano Espaillat (D)
+- LCV Action Fund Endorsement: VA-05 Tom Perriello (D)
+- LCV Action Fund Endorsement: VA-06 Beth Macy (D)
+- LCV Action Fund Endorsement: WA-05 Nate Powell (I)
+- LCV Action Fund Endorsement: MT-SEN Seth Bodnar (I)
+
+## Seat flips computed (no gain/hold on Wikipedia; confirm) (6)
+
+- CA-40 Ken Calvert: prior R -> R: held
+- FL-20 Debbie Wasserman Schultz: prior ? -> D: held
+- MN-02 Matt Little: prior D -> D: held
+- TX-37 Greg Casar: prior D -> D: held
+- UT-04 Mike Kennedy: prior R -> R: held
+- MN-S2 Peggy Flanagan: prior ? -> D: held
+
+## Ambiguous name matches (5)
+
+- DCCC: TX-35 Johnny Garcia -> ['Sylvia R. Garcia', 'Johnny Garcia']
+- New Democrat Coalition Action Fund: TX-35 Johnny Garcia -> ['Sylvia R. Garcia', 'Johnny Garcia']
+- Blue Dog PAC: TX-35 Johnny Garcia -> ['Sylvia R. Garcia', 'Johnny Garcia']
+- LCV Action Fund: IL-02 Donna Miller -> ['Donna Miller', 'Mary E. Miller']
+- LCV Action Fund: TX-29 Sylvia Garcia -> ['Sylvia R. Garcia', 'Johnny Garcia']
+
+## Spent against (FEC Schedule E, not shown on the site) (3)
+
+- Fairshake: IL-07 La Shawn Ford ($5,006,839 against; FEC H6IL07354)
+- Fairshake: IL-SEN Juliana Stratton ($20,238,056 against; FEC S6IL00458)
+- Fairshake: IL-02 Robert Peters ($1,634,132 against; FEC H6IL02298)
