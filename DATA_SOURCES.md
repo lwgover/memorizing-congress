@@ -21,8 +21,8 @@ Update the **Status** table and append to the **Update log** whenever new data l
 | Cities / counties | 440 / 441 districts | Census places/counties + popest 2025 | HI-02 needs a Census API key (CDPs) |
 | Redrawn districts | 148 in 9 states | Census cd119 vs cd120, block by block | Decide on 10 tiny changes (see below) |
 | WAR | 523 / 538 members; 2,965 / 2,972 CSV rows matched | Split Ticket CSV | 15 have no row (uncontested / same-party / delegates) |
-| Kamala 2-way | 107 statewide; **146 pending** (redrawn); **280 missing** | FEC (statewide); district file not yet supplied | Add `data/inputs/pres_2024_by_cd119.csv`; fill `kamala_new_districts.csv` |
-| Last 2-way | 300 / 538 | Wikipedia (provisional) | House results still being entered/certified; rerun, then swap to certified |
+| Kamala 2-way | 533 / 538 (all but the 5 territorial delegates) | The Downballot (districts) + FEC (statewide) | Done. No `pending` or `missing` left |
+| Last 2-way | 369 / 538 | Official state counts (CA, PA) → Wikipedia | Still missing: TX, NY, IL, VA, WA, AZ, TN, WI and others (see §6) |
 | Fundraising | 36 / 538 | OpenFEC | Key allows 60 requests/hour: rerun 09 hourly (cached) until done |
 | Committees | 407 / 538 (119th) | congress-legislators | New members get assignments with the 120th (flip `COMMITTEE_CONGRESS`) |
 | First elected / years | 538 / 538 | Derived from terms + `first_elected.csv` | Done |
@@ -43,6 +43,8 @@ Update the **Status** table and append to the **Update log** whenever new data l
 | 5 | `05_build_districts.py` | `public/data/{districts,states}.topo.json`, `data/interim/district_places.csv` |
 | 6 | `06_detect_redrawn.py` | `data/interim/redrawn.csv`, `reports/redrawn.md` |
 | 7 | `07_join_war.py` | `data/interim/war*.csv`, `reports/war.md` |
+| 8a | `08a_fetch_pres_by_cd.py` | `data/inputs/downballot_pres_2024_cd2026.csv` |
+| 8b | `08b_fetch_official_results.py` | `data/interim/official_house_2026.csv`, `reports/official_results.md` |
 | 8 | `08_join_results.py` | `data/interim/results.csv`, `reports/results.md` |
 | 9 | `09_fetch_fec.py` | `data/interim/fec.csv`, `reports/fec.md` |
 | 10 | `10_fetch_caucuses.py` | `data/interim/caucuses.csv`, `reports/caucuses.md` |
@@ -153,24 +155,31 @@ Similar technical changes in IL, MO, and SC (≤ 225 people) are already treated
 ### Last 2-way (`last2Way`)
 - **Definition**: the member's share of the top two candidates in their most recent general election. Unopposed = 1.0. Same-party top-two races (CA, WA) use winner vs. runner-up.
 - **Fusion ballots** (CT, NY) list each party line plus a total, and **ranked-choice** races (AK, ME) list round 1 plus the final round. The parser keeps each candidate's maximum, which is the total or the final round.
-- **House 2026**: Wikipedia per-state pages (*2026 United States House of Representatives election(s) in <State>*), general-election `{{Election box}}` vote counts. Fallback: percentages from the national results table.
+- **House 2026, official counts first** (`08b`): where a state publishes machine-readable results, those are used before Wikipedia.
+  - **CA:** Secretary of State JSON API (`api.sos.ca.gov/returns/us-rep/district/N`). All 52 districts at 100% of precincts reporting (semi-official until Dec 12 certification). Every official winner matched the roster.
+  - **PA:** Department of State public JSON API (`/api/ElectionReturn/GetCountyData?countyName=X&electionid=117&electiontype=G`). It needs no cookies or browser session. One request per county (67) at 1 per second, with "Representative in Congress" votes summed per district. All 17 districts; winners match the roster. Unofficial until certification.
+    - The results *website* has bot protection, but this API endpoint is public. Don't replay browser session/anti-bot cookies in the pipeline.
+  - **Checked 2026-11-23, not usable yet:** TX and NY refuse automated requests (403); IL has only posted its primary, and the general follows December certification.
+- **House 2026, otherwise**: Wikipedia per-state pages (*2026 United States House of Representatives election(s) in <State>*), general-election `{{Election box}}` vote counts. Fallback: percentages from the national results table.
 - **PR**: 2024 Resident Commissioner page.
 - **Senate**: class II and the 2026 specials from the 2026 table; class I from *2024 United States Senate elections*; class III from *2022 United States Senate elections*.
 - **Gap**: about 240 House races have no numbers on Wikipedia yet. California's district results aren't on its state page, and TX, NY, FL, IL, PA, and others have empty boxes pending certification. Rerun `08 --force` as pages fill in. **Long term**: replace with certified results (state SOS / MIT Election Data + Science Lab). Add a loader and keep Wikipedia as the fallback.
 
 ### Kamala 2-way (`kamala2Way` = Harris / (Harris + Trump), 2024)
+
 | Case | Source | `kamala2WaySource` |
 |---|---|---|
 | Senators, at-large seats, DC | FEC official results, `2024presgeresults.xlsx` | `statewide` |
-| District, lines unchanged | `data/inputs/pres_2024_by_cd119.csv` (**not yet supplied**) | `2024-lines` (or `missing` until supplied) |
-| District redrawn for 2026 | `data/overrides/kamala_new_districts.csv` | `new-lines`, or `pending` until filled |
+| District, lines unchanged for 2026 | The Downballot (2026 lines = 2024 lines) | `2024-lines` |
+| District redrawn for 2026 | `data/overrides/kamala_new_districts.csv` if filled, else The Downballot | `new-lines` |
 | AS, GU, MP, PR, VI | no presidential vote | `n/a` |
 
-**To supply `pres_2024_by_cd119.csv`**: columns `state, district, harris, trump, source, source_url`, with 2024 presidential votes by congressional district **on the 2024 lines**. Candidate sources: The Downballot's 2024 presidential results by congressional district, or Daily Kos Elections' equivalent. Use vote counts, not percentages, so shares are computed and traceable. ME and NE districts belong in this file too.
-
-**To fill redrawn districts** (`kamala_new_districts.csv`: `state, district, dem_votes, rep_votes, source, source_url`), in order of preference: the state's own redistricting reports (e.g. the Texas Legislative Council's election data for the adopted plan), then published tabulations by others, then Lucas's own calculation.
-
----
+**The Downballot** (`08a`): "2020 & 2024 presidential election results for congressional districts used in the 2026 elections" by Jeff Singer, Daniel Donner and David Nir (sponsored by Grassroots Analytics), a public Google Sheet shared via Vote Hub. **Cite as The Downballot, https://the-db.co/presbycd.**
+- We read the **"Vote totals"** tab (exact Harris and Trump votes), so shares come from vote counts, not the rounded "Percentages" tab.
+- All 435 districts are covered on the 2026 lines.
+- **Checks:** the six at-large states match FEC official totals to the vote. Summing districts back to statewide is within a few hundred votes (MD exact, TX -100 of 4.8M, NY +327), the usual noise from splitting precincts.
+- **Order for redrawn districts (SCAFFOLD 4.3):** state documentation or hand entries in `kamala_new_districts.csv` first, then this published tabulation.
+- `data/inputs/pres_2024_by_cd119.csv` is still read first for unchanged districts if you ever supply it, but it's no longer needed.
 
 ## 7. Fundraising (FEC)
 
@@ -287,6 +296,9 @@ Inputs you supply go in `data/inputs/` (`pres_2024_by_cd119.csv`).
 
 Append newest first: date, what changed, and why.
 
+- **2026-11-23**: Pennsylvania official House results (public county API, 17 districts); last2Way now 369/538.
+- **2026-11-23**: California official House results (SOS API) for all 52 districts; last2Way now 352/538. TX/NY/PA/IL official sites checked: blocked or not yet posted.
+- **2026-11-23**: Kamala 2-way filled for every district from The Downballot's 2024 results on 2026 lines (vote totals): 280 unchanged + 146 redrawn. No pending/missing left (M5b).
 - **2026-11-23**: Added "Opposed by" (45 members): groups that spent against a member or backed their general-election opponent.
 - **2026-11-23**: Added endorser logos (step 13) to list and "Backed by" chips.
 - **2026-11-23**: FEC Schedule E pulled for all 10 committees (283 rows); issue PAC backing now 233 members. Fundraising 36/538 (key limited to 60 req/hour).

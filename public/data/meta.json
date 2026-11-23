@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T18:18:29Z",
+  "generated_at": "2026-11-23T18:53:08Z",
   "congress": 120,
   "committee_congress": 119,
   "fec_cycle": 2026,
@@ -8,8 +8,8 @@
     "pending_seats": 3,
     "photo": 411,
     "war": 523,
-    "kamala2Way": 107,
-    "last2Way": 300,
+    "kamala2Way": 533,
+    "last2Way": 369,
     "caucuses": 297,
     "redToBlue": 33,
     "seatFlipped": 64,

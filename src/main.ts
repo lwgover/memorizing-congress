@@ -5,6 +5,7 @@ import { NameMatcher } from "./games/match";
 import { Router } from "./router";
 import { applyTheme, refreshStreak } from "./ui/chrome";
 import { h } from "./ui/dom";
+import { browseView } from "./ui/browse";
 import { masteryView } from "./ui/mastery";
 import { settingsView } from "./ui/settings";
 import { studyView } from "./ui/study";
@@ -26,6 +27,7 @@ async function boot() {
       tap: (root, p) => tapView(root, ctx, p),
       test: (root, p) => testView(root, ctx, p),
       map: (root) => masteryView(root, ctx),
+      members: (root, p) => browseView(root, ctx, p),
       settings: (root) => settingsView(root, ctx),
     }, "today");
     router.render();

@@ -13,6 +13,8 @@ uv run scripts/04_fetch_photos.py $F
 uv run scripts/05_build_districts.py $F
 uv run scripts/06_detect_redrawn.py $F
 uv run scripts/07_join_war.py
+uv run scripts/08a_fetch_pres_by_cd.py $F
+uv run scripts/08b_fetch_official_results.py $F
 uv run scripts/08_join_results.py $F
 uv run scripts/09_fetch_fec.py || echo "09: FEC step incomplete (see data/reports/fec.md)"
 uv run scripts/10_fetch_caucuses.py $F

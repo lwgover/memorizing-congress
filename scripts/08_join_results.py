@@ -190,18 +190,27 @@ def main() -> None:
         senate_rows[(r.state, int(r.senate_class), 2026)] = [
             {"candidate": c["name"], "pct": c["pct"], "party": c["party"]} for c in json.loads(r.candidates)]
 
+    # official state results (08b): preferred over Wikipedia where available
+    off_path = INTERIM / "official_house_2026.csv"
+    official = pd.read_csv(off_path) if off_path.exists() else pd.DataFrame(columns=["seat", "candidate", "party", "votes", "source_url"])
+
     # ---------------- last2Way
     out = []
     for m in seated.itertuples():
         share, how, year, src, opp, opp_party = None, "", None, "", None, None
         if m.chamber == "house":
             year = 2024 if m.state == "PR" else 2026
+            off = official[official.seat == m.seat] if year == 2026 else official.iloc[:0]
+            if len(off):
+                share, how, opp, opp_party = two_way(m.last_name, off.to_dict("records"), "votes")
+                if share is not None:
+                    how, src = f"{how} (official)", off.source_url.iloc[0]
             rows = hb[(hb.state == m.state) & (hb.district == int(m.district)) & (hb.year == year)] if len(hb) else hb
-            if len(rows):
+            if share is None and len(rows):
                 share, how, opp, opp_party = two_way(m.last_name, rows.to_dict("records"), "votes")
                 if share is None:
                     share, how, opp, opp_party = two_way(m.last_name, rows.to_dict("records"), "pct")
-                src = rows.source_url.iloc[0]
+                src = src or rows.source_url.iloc[0]
             if share is None and year == 2026:  # fall back to the national results table (pct)
                 main = w26[w26.seat == m.seat]
                 if len(main):
@@ -237,6 +246,11 @@ def main() -> None:
         pd.DataFrame(columns=["state", "district", "dem_votes", "rep_votes", "source", "source_url"]).to_csv(newl_path, index=False)
     newl = pd.read_csv(newl_path)
     new_share = {(r.state, int(r.district)): round(r.dem_votes / (r.dem_votes + r.rep_votes), 4) for r in newl.itertuples()}
+    # The Downballot: 2024 Harris/Trump votes on the 2026 lines for all 435 districts (08a).
+    # Unchanged districts: 2026 lines = 2024 lines, so it fills those too.
+    db_path = INPUTS / "downballot_pres_2024_cd2026.csv"
+    db = pd.read_csv(db_path) if db_path.exists() else pd.DataFrame(columns=["state", "district", "harris", "trump"])
+    db_share = {(r.state, int(r.district)): round(r.harris / (r.harris + r.trump), 4) for r in db.itertuples()}
     redrawn = pd.read_csv(INTERIM / "redrawn.csv")
     redrawn_ids = set(redrawn[redrawn.counts_as_redrawn].id)
 
@@ -249,10 +263,21 @@ def main() -> None:
             v, s = statewide.get(st), "statewide"
         elif m.seat in redrawn_ids:
             key = (st, int(m.district))
-            v, s = (new_share[key], "new-lines") if key in new_share else (None, "pending")
+            # order (SCAFFOLD 4.3): hand entries / state docs first, then published tabulations
+            if key in new_share:
+                v, s = new_share[key], "new-lines"
+            elif key in db_share:
+                v, s = db_share[key], "new-lines"
+            else:
+                v, s = None, "pending"
         else:
             key = (st, int(m.district))
-            v, s = (cd_share[key], "2024-lines") if key in cd_share else (None, "missing")
+            if key in cd_share:
+                v, s = cd_share[key], "2024-lines"
+            elif key in db_share:
+                v, s = db_share[key], "2024-lines"  # same lines in 2024 and 2026
+            else:
+                v, s = None, "missing"
         if v is None and s == "missing":
             issues["Kamala missing"].append(f"- {m.seat}")
         kam.append({"bioguide_id": m.bioguide_id, "kamala2way": v, "kamala2way_source": s})
