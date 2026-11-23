@@ -35,9 +35,9 @@ const PROGRAM_LABEL: Record<string, string> = {
 };
 
 /** A group's name with its logo (if we have one), for list and "Backed by" chips. */
-export function orgChip(group: string, label: string = group): HTMLElement {
+export function orgChip(group: string, label: string = group, why?: string): HTMLElement {
   const src = logoFor(group);
-  return h("span.org", { title: label },
+  return h(why ? "span.org.against" : "span.org", { title: why ? `${label}: ${why}` : label },
     src ? h("img", { src, alt: "", width: 16, height: 16, loading: "lazy" }) : null,
     label);
 }
@@ -46,7 +46,8 @@ export function orgChip(group: string, label: string = group): HTMLElement {
 export function raceSection(m: Member): HTMLElement | null {
   const lists = (m.targeting ?? []).map((t) => ({ group: t.committee, label: PROGRAM_LABEL[`${t.committee}|${t.program}`] ?? `${t.committee} ${t.program}` }));
   const pacs = m.issuePacSupport ?? [];
-  if (!m.raceRole && !m.seatFlipped && !lists.length && !pacs.length) return null;
+  const against = m.issuePacOpposition ?? [];
+  if (!m.raceRole && !m.seatFlipped && !lists.length && !pacs.length && !against.length) return null;
   const flip = m.seatFlipped
     ? h("span.flip", { style: `--c:${PARTY_VAR[m.party]}`, title: "The winner's party differs from the party that held the seat" }, `Flipped to ${m.party === "D" ? "Democrats" : m.party === "R" ? "Republicans" : "an independent"}`)
     : null;
@@ -54,7 +55,10 @@ export function raceSection(m: Member): HTMLElement | null {
     h("div.eyebrow", "2026 race"),
     m.raceRole || flip ? h("div.row", { style: "gap:8px" }, m.raceRole ? h("b", m.raceRole) : null, flip) : null,
     lists.length ? h("div.chips", ...lists.map((l) => orgChip(l.group, l.label))) : null,
-    pacs.length ? h("div.stack", { style: "gap:6px" }, h("span.small.muted", "Backed by"), h("div.chips", ...pacs.map((p) => orgChip(p)))) : null);
+    pacs.length ? h("div.stack", { style: "gap:6px" }, h("span.small.muted", "Backed by"), h("div.chips", ...pacs.map((p) => orgChip(p)))) : null,
+    against.length ? h("div.stack", { style: "gap:6px" }, h("span.small.muted", "Opposed by"),
+      h("div.chips", ...against.map((o) => orgChip(o.group, o.group, o.why))),
+      h("span.small.muted", against.map((o) => `${o.group}: ${o.why}`).join(" · "))) : null);
 }
 
 /** Flag for members the DCCC put on its Red to Blue list (top challengers in GOP-held seats). */

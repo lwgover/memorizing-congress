@@ -85,8 +85,7 @@ def main() -> None:
     # "Backed by" counts support only; spending against someone (FEC Schedule E "oppose") goes in the report
     opposed = issue[(issue.status == "active") & (issue.side == "oppose")]
     issue_a = issue[(issue.status == "active") & (issue.side != "oppose")]
-    issues["Spent against (FEC Schedule E, not shown on the site)"] = [
-        f"- {r.committee}: {r.district} {r.candidate} ({r.note})" for r in opposed.itertuples()]
+    issues["Opposed by (spent against them, or backed their general-election opponent)"] = []
 
     def match_candidate(row) -> str | None:
         """bioguide of the seated member this candidate row names, else None."""
@@ -112,6 +111,35 @@ def main() -> None:
             else:
                 issues["Candidate rows not matched to a member (lost, or name mismatch)"].append(
                     f"- {r.committee} {r.program}: {r.district} {clean_candidate(r.candidate)} ({r.party or '?'})")
+    # "Opposed by": (a) a group spent against the member (Schedule E "oppose"), or
+    # (b) a group backed the person they beat in the 2026 general election.
+    opposition: dict[str, dict[str, str]] = {}  # member -> {group: why}
+    for r in opposed.itertuples():
+        bid = match_candidate(r)
+        if bid:
+            opposition.setdefault(bid, {}).setdefault(r.committee, "spent against them")
+    by_seat_member = dict(zip(seated.seat, seated.bioguide_id))
+    races = results[results.called == True]  # noqa: E712
+    for r in issue_a.itertuples():
+        if match_candidate(r):
+            continue  # they won; nothing to oppose
+        name = clean_candidate(r.candidate)
+        last, first = last_token(name), norm_name(name)[:1]
+        chamber = "senate" if r.district.endswith("SEN") else "house"
+        pool = races[(races.state == r.state) & (races.chamber == chamber)]
+        exact = pool[pool.seat == r.district]
+        for race in (exact.itertuples() if len(exact) else pool.itertuples()):
+            cands = json.loads(race.candidates or "[]")
+            hit = next((c for c in cands if last_token(c["name"]) == last and norm_name(c["name"])[:1] == first and not c.get("winner")), None)
+            if hit and race.seat in by_seat_member:
+                winner = by_seat_member[race.seat]
+                opposition.setdefault(winner, {}).setdefault(r.committee, f"backed {hit['name']}")
+                break
+    for bid, groups in opposition.items():
+        for g, why in groups.items():
+            issues["Opposed by (spent against them, or backed their general-election opponent)"].append(
+                f"- {seated.set_index('bioguide_id').seat.get(bid)} {seated.set_index('bioguide_id').name.get(bid)}: {g} ({why})")
+
     # seat-level rows -> seat
     seat_rows: dict[str, list[dict]] = {}
     for r in party_a.itertuples():
@@ -153,6 +181,8 @@ def main() -> None:
         targeting = [{k: v for k, v in r.items() if k != "kind"} for r in mine if r["kind"] != "issue"] + \
                     [{k: v for k, v in r.items() if k != "kind"} for r in seat_lists]
         issue_support = sorted({r["committee"] for r in mine if r["kind"] == "issue"})
+        # a group can't be on both sides; if it is (e.g. primary vs. general), backing wins
+        issue_oppose = [{"group": g, "why": why} for g, why in sorted(opposition.get(m.bioguide_id, {}).items()) if g not in issue_support]
 
         # raceRole
         role = None
@@ -176,7 +206,7 @@ def main() -> None:
                     role = f"{protect} incumbent, held on"
 
         out.append({"bioguide_id": m.bioguide_id, "seat_flipped": flipped, "seat_flipped_how": how, "race_role": role,
-                    "targeting": json.dumps(targeting), "issue_pac_support": json.dumps(issue_support),
+                    "targeting": json.dumps(targeting), "issue_pac_support": json.dumps(issue_support), "issue_pac_opposition": json.dumps(issue_oppose),
                     "red_to_blue": any(r["program"] == "Red to Blue" for r in mine)})
 
     df = pd.DataFrame(out)
@@ -191,7 +221,7 @@ def main() -> None:
         **issues,
     })
     log(f"12: flipped={int(df.seat_flipped.sum())} roles={len(roles)} on-lists={int((df.targeting != '[]').sum())} "
-        f"issue-PAC={int((df.issue_pac_support != '[]').sum())} R2B={int(df.red_to_blue.sum())}")
+        f"issue-PAC={int((df.issue_pac_support != '[]').sum())} opposed={int((df.issue_pac_opposition != '[]').sum())} R2B={int(df.red_to_blue.sum())}")
 
 
 if __name__ == "__main__":

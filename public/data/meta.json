@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T17:50:11Z",
+  "generated_at": "2026-11-23T18:18:29Z",
   "congress": 120,
   "committee_congress": 119,
   "fec_cycle": 2026,
@@ -15,7 +15,8 @@
     "seatFlipped": 64,
     "raceRole": 86,
     "issuePacSupport": 233,
-    "fundraising": 36,
+    "issuePacOpposition": 45,
+    "fundraising": 96,
     "committees": 407,
     "funFacts": 0,
     "provisionalIds": 118

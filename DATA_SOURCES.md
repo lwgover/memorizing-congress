@@ -232,7 +232,8 @@ Similar technical changes in IL, MO, and SC (≤ 225 people) are already treated
 **Filling the README's gaps** (pipeline-generated files in `data/targeting_2026/generated/`, same columns as the team's CSVs; the team's files are never edited):
 - **LCV Action Fund (`12a`):** lcv.org/2025-2026-endorsements/. **140 endorsements** (125 House, 15 Senate), of whom 128 are seated members. The page serves the same full list regardless of `?result_page`, so the README's "192" couldn't be reproduced; it may count something else. Worth a manual look.
 - **FEC Schedule E (`12b`):** every 2026 independent expenditure by Fairshake / Protect Progress / Defend American Jobs, United Democracy Project, Leading the Future / Think Big / American Mission, Club for Growth Action, LCV Victory Fund, and Women Vote!. It pages through `/schedules/schedule_e/`, sums per candidate and support/oppose, and skips memo lines.
-  - **Only support counts toward "Backed by"**; spending *against* someone is listed in the report.
+  - **Only support counts toward "Backed by".**
+- **"Opposed by"** (45 members): a group either (a) spent against the member (Schedule E "oppose", which can include primary spending), or (b) endorsed or spent for the person the member beat in the 2026 **general** election. (b) only counts candidates on that seat's general-election ballot, so primary rivals don't show up. The reason ("spent against them" / "backed Scott Perry") is shown with each group. A group never appears on both sides; backing wins.
   - **Status: complete for all 10 committees** (283 candidate rows: 197 support, 86 oppose). Each committee name resolved to the right FEC super PAC (type O), and look-alikes such as "Think Big America PAC" and "Women Vote Smart" were rejected.
     - Leading the Future's own committee has no IEs; it spends through Think Big and American Mission.
     - The key comes from `FEC_API_KEY` in the environment (it's set in `~/.Renviron`, outside the repo). That key's limit is **60 requests/hour**.
@@ -255,7 +256,7 @@ Changed:
 - `last2Way` and `warTrajectory` can be `null`.
 - `last2Way` adds `opponent` and `opponentParty` (top opponent in that race). The site uses them to place the race on the red-to-blue "How blue" meter, so a D-vs-D race isn't drawn as a Democratic landslide.
 - `caucuses` (list of `{code, name, kind}`) and `partyCaucus` (independents only).
-- `seatFlipped`, `raceRole`, `targeting` (`{committee, program, dateAdded}`), `issuePacSupport` (SCAFFOLD 4.5/4.6).
+- `seatFlipped`, `raceRole`, `targeting` (`{committee, program, dateAdded}`), `issuePacSupport` (SCAFFOLD 4.5/4.6), and `issuePacOpposition` (`{group, why}`).
 - `redToBlue`: `2026` for members on the DCCC's Red to Blue list (from the targeting lists). Absent otherwise.
 - `war[]` items carry `chamber`, `opponent` and `opponentParty`: WAR is always a two-candidate race, so the site shows every value with who they ran against (from the CSV's other column; `(Ind)` → `I`).
 - `kamala2WaySource` adds `statewide | missing | n/a`.
@@ -286,6 +287,7 @@ Inputs you supply go in `data/inputs/` (`pres_2024_by_cd119.csv`).
 
 Append newest first: date, what changed, and why.
 
+- **2026-11-23**: Added "Opposed by" (45 members): groups that spent against a member or backed their general-election opponent.
 - **2026-11-23**: Added endorser logos (step 13) to list and "Backed by" chips.
 - **2026-11-23**: FEC Schedule E pulled for all 10 committees (283 rows); issue PAC backing now 233 members. Fundraising 36/538 (key limited to 60 req/hour).
 - **2026-11-23**: Filled targeting gaps: LCV Action Fund scrape (12a, 140 endorsements), FEC Schedule E step (12b; Fairshake committee done, rest awaits FEC_API_KEY). Issue PAC backing now covers 163 members.

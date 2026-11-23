@@ -41,6 +41,8 @@ export interface Member {
   targeting: { committee: string; program: string; dateAdded: string | null }[];
   /** Issue PACs that backed them, e.g. ["Club for Growth PAC", "Fairshake"]. */
   issuePacSupport: string[];
+  /** Groups that spent against them or backed their 2026 general-election opponent. */
+  issuePacOpposition: { group: string; why: string }[];
   /** Cycle they were on the DCCC's Red to Blue list (e.g. 2026). */
   redToBlue?: number;
   war: WarPoint[];

@@ -1,12 +1,12 @@
 # members.json build
 
-_Generated 2026-11-23T17:50:11Z_
+_Generated 2026-11-23T18:18:29Z_
 
 ## Errors (0)
 
 _none_
 
-## Coverage (15)
+## Coverage (16)
 
 - members: 538
 - pending_seats: 3
@@ -19,7 +19,8 @@ _none_
 - seatFlipped: 64
 - raceRole: 86
 - issuePacSupport: 233
-- fundraising: 36
+- issuePacOpposition: 45
+- fundraising: 96
 - committees: 407
 - funFacts: 0
 - provisionalIds: 118
