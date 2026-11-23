@@ -221,7 +221,7 @@ function runQuiz(root: HTMLElement, ctx: Ctx, o: QuizOpts) {
         if (matcher.isMatch(v, m)) return reveal(m, 100, v);
         const given = matcher.best(v);
         if (given && given.id !== m.id && given.state === m.state) recordConfusion(m.id, given.id);
-        reveal(m, 0, given ? given.name : v);
+        reveal(m, 0, given && given.id !== m.id ? `${v} (that's ${given.name})` : v);
       },
     });
     body.replaceChildren(

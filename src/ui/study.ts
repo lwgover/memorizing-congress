@@ -133,7 +133,7 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
       if (matcher.isMatch(v, m)) return finishExact(true, m.name, v);
       const given = matcher.best(v);
       if (given && given.id !== m.id) recordConfusion(m.id, given.id);
-      finishExact(false, m.name, given?.name ?? v);
+      finishExact(false, m.name, given && given.id !== m.id ? `${v} (that's ${given.name})` : v);
     };
     const checkSeat = (v: string): boolean => {
       const p = parseSeat(v, validStates, data.stateNames);
