@@ -2,7 +2,7 @@
 import { FAST_MS, SLOW_MS } from "../config";
 import { roman, seatId, seatLabel } from "../data/load";
 import type { Member, Party } from "../data/types";
-import { norm, parseSeat, typoDistance } from "../games/match";
+import { norm, parseSeat } from "../games/match";
 import { shuffle } from "../games/seed";
 import type { Ctx } from "../main";
 import { CARD_LABEL, dueCards, introduce, newRemainingToday, nextNewMembers, parseCardId, startedStates, stateCards, stateHold, stateProgress, syncUnlocks, unmetInState, unseenCards, type CardType } from "../srs/cards";
@@ -321,8 +321,10 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
       const copy = h("input.input", { type: "text", autocomplete: "off", autocapitalize: "off", spellcheck: "false",
         placeholder: m.name, "aria-label": `Type ${m.name} to continue`, style: "max-width:320px" }) as HTMLInputElement;
       const hint = h("span.muted.small", { "aria-live": "polite" }, "Type their full name to continue.");
-      const targets = [m.name, ...m.aliases].map(norm);
-      const good = (v: string) => { const n = norm(v); return !!n && targets.some((t) => t === n || (t.length > 6 && typoDistance(t, n) <= 1)); };
+      // exact only: the full name unlocks as you finish typing it; a listed alias works on Enter
+      const full = norm(m.name);
+      const aliases = m.aliases.map(norm);
+      const good = (v: string, enter = false) => { const n = norm(v); return !!n && (n === full || (enter && aliases.includes(n))); };
       const unlock = () => {
         locked = false;
         copy.disabled = true;
@@ -336,7 +338,7 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
         if (e.key !== "Enter") return;
         e.preventDefault();
         e.stopPropagation();
-        if (good(copy.value)) unlock();
+        if (good(copy.value, true)) unlock();
         else { copy.classList.add("no"); hint.textContent = `Not quite. Type "${m.name}".`; }
       });
       copyBox = h("div.stack", { style: "gap:6px" }, h("span.rate-label", "Write it out"), copy, hint);
