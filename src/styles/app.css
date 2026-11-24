@@ -204,7 +204,7 @@ th { font-size: 12px; color: var(--muted); font-weight: 600; }
 
 /* ---------- how-blue meter */
 .lean-track { position: relative; height: 14px; border-radius: 7px; margin: 6px 0 2px;
-  background: linear-gradient(90deg, var(--rep) 0%, color-mix(in srgb, var(--rep) 30%, var(--map-land)) 38%, var(--map-land) 50%, color-mix(in srgb, var(--dem) 30%, var(--map-land)) 62%, var(--dem) 100%); }
+  background: linear-gradient(90deg, var(--rep) 0%, color-mix(in srgb, var(--rep) 18%, var(--map-land)) 50%, color-mix(in srgb, var(--dem) 18%, var(--map-land)) 50%, var(--dem) 100%); }
 .lean-mid { position: absolute; left: 50%; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--ink); opacity: 0.35; }
 .lean-mark { position: absolute; top: 50%; transform: translate(-50%, -50%); box-sizing: border-box; }
 .lean-mark.race { width: 20px; height: 20px; border-radius: 50%; background: var(--ink); border: 3px solid var(--bg); box-shadow: 0 0 0 1px var(--ink); }

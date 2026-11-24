@@ -1,12 +1,15 @@
 # FEC 2026 fundraising
 
-_Generated 2026-11-23T18:59:50Z_
+_Generated 2026-11-24T17:18:55Z_
 
-## No FEC candidate found (1)
+## No FEC candidate found (4)
 
 - GA-01 Jim Kingston
+- PA-01 Bob Harvie
+- AK-S2 Mary Sattler Peltola
+- MN-S2 Peggy Flanagan
 
-## Search-based IDs (verify) (33)
+## Search-based IDs (verify) (115)
 
 - AZ-01 Amish Shah: ['H4AZ01194']
 - AZ-05 Mark Lamb: ['H6AZ05265']
@@ -41,11 +44,93 @@ _Generated 2026-11-23T18:59:50Z_
 - IA-03 Sarah Trone Garriott: ['H6IA03268']
 - IA-04 Chris McGowan: ['H6IA04167']
 - IL-02 Donna Miller: ['H6IL02355']
+- IL-04 Patty García: ['H6IL04153']
+- IL-07 La Shawn Ford: ['H6IL07354']
+- IL-09 Daniel Biss: ['H6IL09228']
+- IN-05 J. D. Ford: ['H6IN05307']
+- KY-04 Ed Gallrein: ['H6KY04171']
+- KY-06 Zach Dembo: ['H6KY06184']
+- MA-06 Dan Koh: ['H8MA03072']
+- MD-05 Adrian Boafo: ['H6MD05321']
+- ME-02 Paul LePage: ['H6ME02148']
+- MI-04 Sean McCann: ['H6MI04204']
+- MI-07 William Lawrence: ['H6MI07298']
+- MI-10 Christina Hines: ['H6MI10276']
+- MI-11 Jeremy Moss: ['H6MI11191']
+- MI-13 Donavan McKinney: ['H6MI13254']
+- MN-02 Matt Little: ['H6MN02230']
+- MO-02 Fred Wellman: ['H6MO02343']
+- MO-06 Chris Stigall: ['H6MO06310']
+- MT-01 Sam Forstag: ['H6MT01137']
+- NC-03 Raymond Smith Jr.: ['H6NC03229']
+- NC-05 Chuck Hubbard: ['H4NC05294']
+- NC-06 Cyril Jefferson: ['H6NC06164']
+- NC-09 Richard Ojeda: ['H6NC09218']
+- NC-11 Jamie Ager: ['H6NC11248']
+- NC-13 Paul Barringer: ['H6NC13228']
+- NC-14 LaKesha Womack: ['H6NC14069']
+- NE-02 Denise Powell: ['H6NE02174']
+- NH-01 Stefany Shaheen: ['H6NH01321']
+- NJ-02 Zack Mullock: ['H6NJ02251']
+- NJ-07 Rebecca Bennett: ['H6NJ07201']
+- NJ-12 Adam Hamawy: ['H6NJ12417']
+- NV-02 Teresa Benitez-Thompson: ['H6NV02362']
+- NY-07 Claire Valdez: ['H6NY07214']
+- NY-10 Brad Lander: ['H6NY10176']
+- NY-12 Micah Lasher: ['H6NY12172']
+- NY-13 Darializa Avila Chevalier: ['H6NY13279']
+- NY-17 Cait Conley: ['H6NY17171']
+- NY-21 Anthony Constantino: ['H6NY21157']
+- OH-07 Brian Poindexter: ['H6OH07168']
+- OH-10 Kristina Knickerbocker: ['H6OH10121']
+- OH-15 Don Leonard: ['H6OH15112']
+- OK-01 Mark Tedford: ['H6OK01235']
+- PA-03 Chris Rabb: ['H6PA03203']
+- PA-07 Bob Brooks: ['H6PA07188']
+- PA-08 Paige Cognetti: ['H6PA08293']
+- PA-10 Janelle Stelson: ['H4PA10104']
+- SC-01 Nancy Lacore: ['H6SC01359']
+- SC-05 Wes Climer: ['H6SC05202']
+- SD-AL Marty Jackley: ['H6SD01109']
+- TN-04 Victoria Broderick: ['H4TN04270']
+- TN-05 Charlie Hatcher: ['H6TN05405']
+- TN-06 Johnny Garrett: ['H6TN06213']
+- TN-09 Brent Taylor: ['H6TN09464']
+- TX-02 Steve Toth: ['H6TX08175']
+- TX-08 Jessica Steinmann: ['H6TX08209']
+- TX-09 Leticia Gutierrez: ['H6TX09231']
+- TX-10 Chris Gober: ['H6TX10221']
+- TX-15 Bobby Pulido: ['H6TX15246']
+- TX-19 Tom Sell: ['H6TX19206']
+- TX-21 Mark Teixeira: ['H6TX21301']
+- TX-22 Trever Nehls: ['H6TX22283']
+- TX-23 Katy Padilla Stout: ['H6TX23273']
+- TX-30 Frederick Haynes III: ['H6TX30245']
+- TX-32 Jace Yarbrough: ['H6TX32225']
+- TX-35 Johnny Garcia: ['H6TX35095']
+- TX-38 Jon Bonck: ['H6TX02244']
+- VA-01 Shannon Taylor: ['H6VA01299']
+- VI-AL Janelle Sarauw: ['H6VI01065']
+- WA-04 Amanda McKinney: ['H6WA04216']
+- WI-01 Mitchell Berman: ['H6WI01283']
+- WI-03 Rebecca Cooke: ['H4WI03169']
+- WI-07 Michael Alfonso: ['H6WI07223']
+- WY-AL Chuck Gray: ['H6WY00217']
+- IL-S2 Juliana Stratton: ['S6IL00458']
+- IA-S2 Josh Turek: ['S6IA00298']
+- KS-S2 Adam Hamilton: ['S6KS00312']
+- ME-S2 Troy Jackson: ['S6ME00464']
+- MI-S2 Abdul El-Sayed: ['S6MI00418']
+- MS-S2 Scott Colom: ['S6MS00133']
+- MT-S2 Kurt Alme: ['S6MT00295']
+- NC-S2 Roy Cooper: ['S6NC00407']
+- SC-S2 Annie Andrews: ['S6SC04239']
+- TX-S2 James Talarico: ['S6TX00479']
 
-## No 2026 totals (0)
+## No 2026 totals (1)
 
-_none_
+- IL-08 Melissa Bean: ['H2IL08088']
 
 ## Status (1)
 
-- 140/538 members with totals (stopped early: rate limit)
+- 533/538 members with totals

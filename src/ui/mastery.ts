@@ -62,7 +62,7 @@ export function masteryView(root: HTMLElement, { data }: Ctx) {
       h("span.row", { style: "gap:6px" }, h("span.sw", { style: "background:var(--rep)" }), "Republican"),
       h("span.row", { style: "gap:6px" }, h("span.sw", { style: "background:var(--ind)" }), "Independent"),
       h("span.row", { style: "gap:6px" }, h("span.sw", { style: "background:var(--surface);border:1px solid var(--line)" }), "Seat pending")];
-    return [h("span", "Trump +40"), h("span.bar", ...[0.3, 0.4, 0.47, 0.53, 0.6, 0.7].map((v) => h("span", { style: `background:${harrisColor(v)}` }))), h("span", "Harris +40"),
+    return [h("span", "Trump +80"), h("span.bar", ...[0.1, 0.3, 0.4, 0.49, 0.51, 0.6, 0.7, 0.9].map((v) => h("span", { style: `background:${harrisColor(v)}` }))), h("span", "Harris +80"),
       h("span.muted", { style: "margin-left:auto" }, "Gray: redrawn for 2026 or not loaded yet")];
   }
 
@@ -88,6 +88,8 @@ export function masteryView(root: HTMLElement, { data }: Ctx) {
 function harrisColor(v: number | null): string {
   if (v === null) return "var(--map-land)";
   const t = Math.max(-1, Math.min(1, (v - 0.5) / 0.4));
-  const pct = Math.round(Math.abs(t) * 100);
+  if (t === 0) return "var(--map-land)";
+  // fades toward gray at 50%, but keeps a visible tint so 51% reads blue and 49% reads red
+  const pct = Math.round(18 + Math.abs(t) * 82);
   return `color-mix(in srgb, ${t >= 0 ? "var(--dem)" : "var(--rep)"} ${pct}%, var(--map-land))`;
 }

@@ -1,6 +1,6 @@
 # members.json build
 
-_Generated 2026-11-23T19:06:46Z_
+_Generated 2026-11-24T17:18:59Z_
 
 ## Errors (0)
 
@@ -20,7 +20,7 @@ _none_
 - raceRole: 86
 - issuePacSupport: 233
 - issuePacOpposition: 45
-- fundraising: 140
+- fundraising: 533
 - committees: 407
 - funFacts: 0
 - provisionalIds: 118
