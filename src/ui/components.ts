@@ -131,7 +131,46 @@ export function districtMini(data: AppData, state: string, opts: { highlight?: s
       stroke: "var(--map-edge)", "stroke-width": 1.5, "stroke-linejoin": "round",
     }));
   }
+  if (!opts.silhouette && opts.highlight && opts.highlight !== state) addInset(svg, fc.features, opts.highlight, path, size, opts.color);
   return svg;
+}
+
+let insetSeq = 0;
+/**
+ * Districts too small to see at state scale (NYC, Chicago, LA...) get a zoomed inset in the
+ * corner farthest from them, plus a box on the main map showing where the inset is.
+ */
+function addInset(svg: SVGElement, feats: any[], highlight: string, path: ReturnType<typeof geoPath>, size: number, color?: string) {
+  const target = feats.find((f) => f.properties.id === highlight);
+  if (!target) return;
+  const [[x0, y0], [x1, y1]] = path.bounds(target as GeoPermissibleObjects);
+  const d = Math.max(x1 - x0, y1 - y0);
+  if (!(d < size * 0.12)) return;
+  const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+  const box = size * 0.44;
+  const k = Math.min(24, Math.max(2.5, (box * 0.5) / Math.max(d, 0.5)));
+  const r = box / 2 / k; // half-width of the zoomed region, in main-map units
+  // farthest corner from the district
+  const corners: [number, number][] = [[4, 4], [size - box - 4, 4], [4, size - box - 4], [size - box - 4, size - box - 4]];
+  const [bx, by] = corners.reduce((best, c) =>
+    Math.hypot(c[0] + box / 2 - cx, c[1] + box / 2 - cy) > Math.hypot(best[0] + box / 2 - cx, best[1] + box / 2 - cy) ? c : best);
+  const clipId = `inset-clip-${++insetSeq}`;
+  const edge = { fill: "none", stroke: "var(--ink)", "stroke-width": 1.25, "stroke-opacity": 0.55 };
+  svg.append(
+    s("rect", { x: cx - r, y: cy - r, width: 2 * r, height: 2 * r, ...edge, "stroke-dasharray": "3 2" }),
+    s("defs", {}, s("clipPath", { id: clipId }, s("rect", { x: bx, y: by, width: box, height: box, rx: 8 }))),
+    s("rect", { x: bx, y: by, width: box, height: box, rx: 8, fill: "var(--bg)" }));
+  const g = s("g", { "clip-path": `url(#${clipId})` });
+  const zoom = s("g", { transform: `translate(${bx + box / 2} ${by + box / 2}) scale(${k}) translate(${-cx} ${-cy})` });
+  for (const f of feats) {
+    const [[a0, b0], [a1, b1]] = path.bounds(f as GeoPermissibleObjects);
+    if (a1 < cx - r || a0 > cx + r || b1 < cy - r || b0 > cy + r) continue; // outside the inset
+    const hl = f.properties.id === highlight;
+    zoom.append(s("path", { d: path(f as GeoPermissibleObjects) ?? "", fill: hl ? (color ?? "var(--ink)") : "var(--map-land)",
+      stroke: "var(--map-edge)", "stroke-width": 1.5, "stroke-linejoin": "round", "vector-effect": "non-scaling-stroke" }));
+  }
+  g.append(zoom);
+  svg.append(g, s("rect", { x: bx, y: by, width: box, height: box, rx: 8, ...edge }));
 }
 
 export function promptMap(data: AppData, m: Member, opts: { silhouette?: boolean; color?: string } = {}): HTMLElement {

@@ -2,7 +2,7 @@
 import { FAST_MS, SLOW_MS } from "../config";
 import { roman, seatId, seatLabel } from "../data/load";
 import type { Member, Party } from "../data/types";
-import { parseSeat } from "../games/match";
+import { norm, parseSeat, typoDistance } from "../games/match";
 import { shuffle } from "../games/seed";
 import type { Ctx } from "../main";
 import { CARD_LABEL, dueCards, introduce, newRemainingToday, nextNewMembers, parseCardId, startedStates, stateCards, stateHold, stateProgress, syncUnlocks, unmetInState, unseenCards, type CardType } from "../srs/cards";
@@ -15,7 +15,7 @@ import { PARTY_NAME, fmtWar, photo, promptMap, promptName, revealCard, roleChip,
 import { fmtMoney, h, toTop } from "./dom";
 import { answerInput, skipButton } from "./answer";
 
-interface Outcome { correct: boolean; score?: number; partial?: boolean; given?: string; answerText: string; suggest: Grade }
+interface Outcome { correct: boolean; score?: number; partial?: boolean; given?: string; answerText: string; suggest: Grade; copyName?: boolean }
 
 const RATING_LABEL: [Grade, string][] = [[Rating.Again, "Again"], [Rating.Hard, "Hard"], [Rating.Good, "Good"], [Rating.Easy, "Easy"]];
 
@@ -119,13 +119,15 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
   function renderCard(id: string, m: Member, type: CardType) {
     const t0 = performance.now();
     const elapsed = () => performance.now() - t0;
+    // cards that ask you to recall a name: miss it and you write it out before moving on
+    const copyName = type === "district->name" || type === "face->name";
     const finishExact = (ok: boolean, answerText: string, given?: string, partial = false) =>
-      answered(id, m, { correct: ok, partial, given, answerText, suggest: ratingForExact(ok, elapsed(), FAST_MS, SLOW_MS, partial) });
+      answered(id, m, { correct: ok, partial, given, answerText, suggest: ratingForExact(ok, elapsed(), FAST_MS, SLOW_MS, partial), copyName });
     const finishScore = (score: number, answerText: string, given: string) =>
       answered(id, m, { correct: score >= 70, score, partial: score > 0 && score < 70, given, answerText, suggest: ratingForScore(score) });
 
     const validStates = new Set(data.stateNames.keys());
-    const skip = (answerText: string) => answered(id, m, { correct: false, given: "I don't know", answerText, suggest: Rating.Again });
+    const skip = (answerText: string) => answered(id, m, { correct: false, given: "I don't know", answerText, suggest: Rating.Again, copyName });
     const nameInput = (onSubmit: (v: string) => void) => answerInput({
       placeholder: "Name (last name is fine)", onSubmit, onSkip: () => skip(m.name),
       instant: (v) => matcher.isExact(v, m),
@@ -310,10 +312,40 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
     const rateRow = h("div.rate.secondary", { role: "group", "aria-label": "Rate it yourself" },
       ...RATING_LABEL.map(([g, label], k) => h("button", { type: "button", class: g === o.suggest ? "suggest" : "", onclick: () => rate(g) },
         `${label} `, h("small", `${iv[g]} · ${k + 1}`))));
+    // missed a name: type it out (full name) to unlock Next
+    let locked = !!o.copyName && !o.correct;
+    const actions = [nextBtn, ...rateRow.querySelectorAll("button")] as HTMLButtonElement[];
+    let copyBox: HTMLElement | null = null;
+    if (locked) {
+      actions.forEach((b) => { b.disabled = true; });
+      const copy = h("input.input", { type: "text", autocomplete: "off", autocapitalize: "off", spellcheck: "false",
+        placeholder: m.name, "aria-label": `Type ${m.name} to continue`, style: "max-width:320px" }) as HTMLInputElement;
+      const hint = h("span.muted.small", { "aria-live": "polite" }, "Type their full name to continue.");
+      const targets = [m.name, ...m.aliases].map(norm);
+      const good = (v: string) => { const n = norm(v); return !!n && targets.some((t) => t === n || (t.length > 6 && typoDistance(t, n) <= 1)); };
+      const unlock = () => {
+        locked = false;
+        copy.disabled = true;
+        copy.classList.add("ok");
+        hint.textContent = "Got it.";
+        actions.forEach((b) => { b.disabled = false; });
+        nextBtn.focus({ preventScroll: true });
+      };
+      copy.addEventListener("input", () => { copy.classList.remove("no"); if (good(copy.value)) unlock(); });
+      copy.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+        e.stopPropagation();
+        if (good(copy.value)) unlock();
+        else { copy.classList.add("no"); hint.textContent = `Not quite. Type "${m.name}".`; }
+      });
+      copyBox = h("div.stack", { style: "gap:6px" }, h("span.rate-label", "Write it out"), copy, hint);
+    }
     stage.append(
       h("div.panel.stack", { style: "gap:12px" },
         h("div", { class: `verdict ${o.correct ? "ok" : "no"}` }, verdictText,
           !o.correct || o.score !== undefined ? h("span.muted", { style: "font-weight:500" }, ` · answer: ${o.answerText}${o.given ? ` · you said ${o.given}` : ""}`) : null),
+        copyBox,
         h("div.next-row", nextBtn,
           h("span.muted.small", `Counts as `, h("b", { style: "color:var(--ink)" }, suggestLabel), ` · back in ${iv[o.suggest]} · `, h("span.kbd", "Enter"))),
         h("div.stack", { style: "gap:6px" }, h("span.rate-label", "Or rate it yourself"), rateRow)),
@@ -321,12 +353,13 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
     );
 
     keyHandler = (e) => {
-      if (e.target instanceof HTMLTextAreaElement) return;
+      if (e.target instanceof HTMLTextAreaElement || locked) return;
       if (e.key === "Enter") { e.preventDefault(); rate(o.suggest); }
       const n = Number(e.key);
       if (n >= 1 && n <= 4) rate(RATING_LABEL[n - 1][0]);
     };
-    (nextBtn as HTMLButtonElement).focus();
+    if (locked) (copyBox!.querySelector("input") as HTMLInputElement).focus({ preventScroll: true });
+    else (nextBtn as HTMLButtonElement).focus();
   }
 
   function finish() {
