@@ -178,7 +178,10 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
         break;
       case "name->party":
         view = h("div.stack", nameTitle("Which party?"),
-          buttons((["D", "R", "I"] as Party[]).map((p) => [PARTY_NAME[p], () => finishExact(p === m.party, PARTY_NAME[m.party], PARTY_NAME[p])]), () => skip(PARTY_NAME[m.party])));
+          buttons((["D", "R", "I"] as Party[]).map((p) => [PARTY_NAME[p], () => {
+            finishExact(p === m.party, PARTY_NAME[m.party], PARTY_NAME[p]);
+            if (m.id === FETTERMAN && p === "R") crystalBall();
+          }]), () => skip(PARTY_NAME[m.party])));
         break;
       case "name->face": {
         const others = shuffle(data.members.filter((x) => x.photo && x.id !== m.id && x.chamber === m.chamber), Math.random)
@@ -351,6 +354,23 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
 }
 
 // ------------------------------------------------------------------ inputs
+const FETTERMAN = "F000479";
+
+/** Easter egg: calling John Fetterman a Republican. Still graded wrong; he's a Democrat (for now). */
+function crystalBall(): void {
+  const close = () => { overlay.remove(); document.removeEventListener("keydown", onKey, true); };
+  const onKey = (e: KeyboardEvent) => { if (e.key === "Escape" || e.key === "Enter") { e.preventDefault(); e.stopPropagation(); close(); } };
+  const overlay = h("div.egg", { role: "dialog", "aria-modal": "true", "aria-label": "Crystal ball", onclick: (e: Event) => { if (e.target === overlay) close(); } },
+    h("div.egg-card",
+      h("div.egg-ball", { "aria-hidden": "true" }, "🔮"),
+      h("h2", "Not yet 😉"),
+      h("p.muted", "Didn't know you could see the future."),
+      h("button.btn", { type: "button", onclick: close }, "Back to the present")));
+  document.body.append(overlay);
+  document.addEventListener("keydown", onKey, true);
+  (overlay.querySelector("button") as HTMLButtonElement).focus({ preventScroll: true });
+}
+
 function buttons(opts: [string, () => void][], onSkip: () => void): HTMLElement {
   return h("div.stack", { style: "gap:10px" },
     h("div.big-choices", ...opts.map(([label, fn], k) => h("button.btn.line", { type: "button", onclick: fn, "aria-keyshortcuts": String(k + 1) }, label))),

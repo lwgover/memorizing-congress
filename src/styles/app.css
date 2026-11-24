@@ -269,3 +269,12 @@ th { font-size: 12px; color: var(--muted); font-weight: 600; }
 .member-panel { position: fixed; inset: 0; z-index: 40; background: color-mix(in srgb, var(--ink) 35%, transparent); overflow-y: auto; padding: 24px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px)); }
 .member-panel-inner { max-width: 760px; margin: 0 auto; display: grid; gap: 10px; background: var(--bg); border-radius: 14px; padding: 16px; box-shadow: 0 10px 40px rgb(0 0 0 / 0.25); }
 body.no-scroll { overflow: hidden; }
+
+/* Easter egg: the Fetterman crystal ball */
+.egg { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 16px; background: color-mix(in srgb, var(--ink) 40%, transparent); animation: egg-fade 0.2s ease-out; }
+.egg-card { background: var(--bg); border-radius: 14px; padding: 24px 28px; max-width: 340px; text-align: center; display: grid; gap: 8px; justify-items: center; box-shadow: 0 10px 40px rgb(0 0 0 / 0.25); }
+.egg-card h2 { margin: 0; }
+.egg-card p { margin: 0 0 8px; }
+.egg-ball { font-size: 72px; line-height: 1; filter: drop-shadow(0 0 18px color-mix(in srgb, var(--raspberry) 55%, transparent)); animation: egg-glow 2.4s ease-in-out infinite; }
+@keyframes egg-fade { from { opacity: 0; } }
+@keyframes egg-glow { 50% { transform: translateY(-4px) scale(1.04); filter: drop-shadow(0 0 28px color-mix(in srgb, var(--teal) 70%, transparent)); } }
