@@ -85,7 +85,7 @@ export function fmtWar(v: number): string {
 
 /** WAR is a two-candidate race, so it is always shown with the opponent: "2024 vs. Gerald Malloy (R)". */
 export function warRace(p: WarPoint): string {
-  return `${p.year} vs. ${p.opponent} (${p.opponentParty})`;
+  return `${p.year} vs. ${p.opponent} (${p.opponentParty})${p.lost ? ", lost" : ""}`;
 }
 
 export function sparkline(war: WarPoint[], party: Party, w = 120, hgt = 36, scale = 6): SVGElement {
@@ -98,7 +98,9 @@ export function sparkline(war: WarPoint[], party: Party, w = 120, hgt = 36, scal
   const color = PARTY_VAR[party];
   svg.append(s("polyline", { points: war.map((p, i) => `${x(i)},${y(p.value)}`).join(" "), fill: "none", stroke: color, "stroke-width": 2, "stroke-linejoin": "round" }));
   war.forEach((p, i) => {
-    const dot = s("circle", { cx: x(i), cy: y(p.value), r: i === war.length - 1 ? 3.5 : 2.2, fill: color });
+    // lost races: hollow dot
+    const dot = s("circle", { cx: x(i), cy: y(p.value), r: i === war.length - 1 ? 3.5 : 2.2,
+      fill: p.lost ? "var(--bg)" : color, ...(p.lost ? { stroke: color, "stroke-width": 1.5 } : {}) });
     const t = s("title");
     t.textContent = `${warRace(p)}: ${fmtWar(p.value)}`;
     dot.append(t);
@@ -235,9 +237,10 @@ export function warTable(m: Member): HTMLElement {
       h("thead", h("tr", h("th", "Year"), h("th", "Race"), h("th", { style: "text-align:right" }, "WAR"))),
       h("tbody", ...[...m.war].reverse().map((p) => h("tr",
         h("td.num", String(p.year)),
-        h("td", `${p.chamber === "senate" ? "Senate" : "House"} vs. `, h("b", p.opponent), " ", h(`span.party.${p.opponentParty}`, { style: "margin-left:4px" }, p.opponentParty)),
+        h("td", `${p.chamber === "senate" ? "Senate" : "House"} vs. `, h("b", p.opponent), " ", h(`span.party.${p.opponentParty}`, { style: "margin-left:4px" }, p.opponentParty),
+          p.lost ? h("span.muted.small", { style: "margin-left:6px" }, "lost") : null),
         h("td.num", { style: `text-align:right;font-weight:700;color:${p.value >= 0 ? "var(--good)" : "var(--muted)"}` }, fmtWar(p.value))))))),
-    h("p.muted.small", "WAR (wins above replacement): how far they ran ahead of (+) or behind (−) what a generic candidate of their party would get against that opponent."));
+    h("p.muted.small", "WAR (wins above replacement): how far they ran ahead of (+) or behind (−) what a generic candidate of their party would get against that opponent. Races they lost are included and marked."));
 }
 
 export function mnemonicEditor(m: Member, emphasize: boolean): HTMLElement {

@@ -1,6 +1,6 @@
 /** Tests (SCAFFOLD 6.2, 6.3): Name -> District and District -> Name, plus the confusables drill. */
 import type { GeoPermissibleObjects } from "d3-geo";
-import { roman, seatId, seatLabel } from "../data/load";
+import { mixupText, roman, seatId, seatLabel } from "../data/load";
 import type { Member } from "../data/types";
 import { tapScore } from "../games/districtTap";
 import { parseSeat } from "../games/match";
@@ -230,7 +230,7 @@ function runQuiz(root: HTMLElement, ctx: Ctx, o: QuizOpts) {
         if (matcher.isMatch(v, m)) return reveal(m, 100, v);
         const given = matcher.best(v);
         if (given && given.id !== m.id && given.state === m.state) recordConfusion(m.id, given.id);
-        reveal(m, 0, given && given.id !== m.id ? `${v} (that's ${given.name})` : v);
+        reveal(m, 0, given && given.id !== m.id ? mixupText(v, given) : v);
       },
     });
     body.replaceChildren(

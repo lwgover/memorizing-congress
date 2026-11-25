@@ -1,6 +1,6 @@
 /** Study session: due reviews, then new members (introduced with a card first), FSRS-scheduled. */
 import { FAST_MS, SLOW_MS } from "../config";
-import { roman, seatId, seatLabel } from "../data/load";
+import { mixupText, roman, seatId, seatLabel } from "../data/load";
 import type { Member, Party } from "../data/types";
 import { norm, parseSeat } from "../games/match";
 import { shuffle } from "../games/seed";
@@ -149,7 +149,7 @@ export function studyView(root: HTMLElement, ctx: Ctx, params: URLSearchParams) 
       if (matcher.isMatch(v, m)) return finishExact(true, m.name, v);
       const given = matcher.best(v);
       if (given && given.id !== m.id) recordConfusion(m.id, given.id);
-      finishExact(false, m.name, given && given.id !== m.id ? `${v} (that's ${given.name})` : v);
+      finishExact(false, m.name, given && given.id !== m.id ? mixupText(v, given) : v);
     };
     const checkSeat = (v: string): boolean => {
       const p = parseSeat(v, validStates, data.stateNames);

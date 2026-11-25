@@ -9,6 +9,11 @@ whoever held that seat next:
     (congress-legislators terms), or the 120th roster for Y = 2026.
   - That member's column is found by last-name match (fuzzy fallback), with
     data/overrides/war_crosswalk.csv for anything the matcher can't resolve.
+Races a current member LOST are kept too (won = false): the losing column's name is matched
+against current members from the same state, strictly (full-name similarity >= 90 and the same
+first initial, not just a shared last name), e.g. Sherrod Brown's 2024 Ohio Senate race. Only
+for races someone won and was seated (not NC-09 2018).
+
 Member WAR = -Sortable if they're in the Democrat column, +Sortable if Republican
 (independents keep the side of the column they're listed in, e.g. "Dan Osborn (Ind)").
 
@@ -124,7 +129,41 @@ def main() -> None:
         name, last = roster_names.get(bid, ("", ""))
         return [norm_name(name)], norm_name(last or "")
 
-    rows, unmatched, ambiguous = [], [], []
+    seated_ids = roster[roster.bioguide_id.notna()]
+    by_state: dict[str, list[str]] = {}
+    for r in seated_ids.itertuples():
+        by_state.setdefault(r.state, []).append(r.bioguide_id)
+
+    def strict_member(cand: str, st: str, skip: str | None) -> str | None:
+        """A current member from this state whose full name clearly matches (for lost races)."""
+        c = norm_name(re.sub(r"\s*\(Ind\)\s*", "", cand))
+        if not c:
+            return None
+        hits = []
+        for bid in by_state.get(st, []):
+            if bid == skip:
+                continue
+            v, last = variants(bid)
+            if not last or c.split()[-1] != last.split()[-1]:
+                continue
+            firsts = {x.split()[0][0] for x in v if x}
+            if c.split()[0][0] not in firsts:
+                continue
+            score = max((fuzz.token_sort_ratio(c, x) for x in v), default=0)
+            if score >= 90 or any(x == c for x in v):
+                hits.append(bid)
+        return hits[0] if len(hits) == 1 else None
+
+    def race_row(bid, side, r, how, score, won):
+        member_war = -float(r.Sortable) if side == "D" else float(r.Sortable)
+        opp_raw = str(r.Republican if side == "D" else r.Democrat)
+        opp_party = "I" if "(Ind)" in opp_raw else ("R" if side == "D" else "D")
+        return {"bioguide_id": bid, "year": int(r.Year), "chamber": r.Chamber.lower(), "geography": r.Geography,
+                "column": side, "candidate": r.Democrat if side == "D" else r.Republican,
+                "opponent": re.sub(r"\s*\(Ind\)\s*", "", opp_raw).strip(), "opponent_party": opp_party,
+                "war": round(member_war, 2), "match": how, "score": round(score), "won": won}
+
+    rows, unmatched, ambiguous, losses = [], [], [], []
     for r in war.itertuples(index=False):
         st, dist = geo_to_seat(r.Chamber, r.Geography)
         key = (int(r.Year), r.Chamber, r.Geography)
@@ -145,20 +184,25 @@ def main() -> None:
                 if len(scored) > 1 and scored[1][0] == scored[0][0] and scored[1][1] != scored[0][1]:
                     ambiguous.append(f"- {key}: {scored[:2]}")
                 best = (scored[0][1], scored[0][2], scored[0][0], "terms")
+        # the other column: a current member who lost this race? Only when someone took the seat
+        # (no winner = voided or vacated, e.g. NC-09 2018, so nobody "lost").
+        for side, cand in (("D", r.Democrat), ("R", r.Republican)):
+            if not best or side == best[1]:
+                continue
+            lb = strict_member(str(cand), st, best[0])
+            if lb:
+                rows.append(race_row(lb, side, r, "lost-race name", 100, False))
+                losses.append(f"- {r.Year} {r.Chamber} {r.Geography}: {cand} ({lb}) lost to "
+                              f"{r.Republican if side == 'D' else r.Democrat}")
         if not best:
             unmatched.append({"Year": r.Year, "Chamber": r.Chamber, "Geography": r.Geography,
                               "Democrat": r.Democrat, "Republican": r.Republican, "term_winners": ",".join(cands)})
             continue
         bid, side, score, how = best
-        member_war = -float(r.Sortable) if side == "D" else float(r.Sortable)
-        opp_raw = str(r.Republican if side == "D" else r.Democrat)
-        opp_party = "I" if "(Ind)" in opp_raw else ("R" if side == "D" else "D")
-        rows.append({"bioguide_id": bid, "year": int(r.Year), "chamber": r.Chamber.lower(), "geography": r.Geography,
-                     "column": side, "candidate": r.Democrat if side == "D" else r.Republican,
-                     "opponent": re.sub(r"\s*\(Ind\)\s*", "", opp_raw).strip(), "opponent_party": opp_party,
-                     "war": round(member_war, 2), "match": how, "score": round(score)})
+        rows.append(race_row(bid, side, r, how, score, True))
 
-    df = pd.DataFrame(rows).drop_duplicates(["bioguide_id", "year", "chamber"])
+    # wins first, so a won race beats a same-year lost one (e.g. a special and a regular election)
+    df = pd.DataFrame(rows).sort_values("won", ascending=False).drop_duplicates(["bioguide_id", "year", "chamber"])
     df.to_csv(INTERIM / "war.csv", index=False)
 
     # summary per current member
@@ -169,8 +213,9 @@ def main() -> None:
         series = list(zip(s.year, s.war))
         summ.append({"bioguide_id": r.bioguide_id,
                      # every WAR value carries its race: who they ran against
-                     "war": json.dumps([{"year": int(y), "value": float(v), "chamber": c, "opponent": o, "opponentParty": op}
-                                        for y, v, c, o, op in zip(s.year, s.war, s.chamber, s.opponent, s.opponent_party)],
+                     "war": json.dumps([{"year": int(y), "value": float(v), "chamber": c, "opponent": o, "opponentParty": op,
+                                         **({} if won else {"lost": True})}
+                                        for y, v, c, o, op, won in zip(s.year, s.war, s.chamber, s.opponent, s.opponent_party, s.won)],
                                        ensure_ascii=False),
                      "war_trajectory": trajectory(series) if series else None,
                      "n_races": len(series)})
@@ -205,13 +250,14 @@ def main() -> None:
     write_report("war", "WAR join", {
         "Errors (current members with an unmatched race row)": errors,
         "Ambiguous matches": ambiguous,
+        "Lost races credited to current members (check)": losses,
         "Current members with no WAR rows (likely uncontested / not in CSV)": [
             f"- {r.seat}: {r.name}" for r in no_war.itertuples()],
         "Unmatched race rows (all years; mostly non-current winners)": [
             f"- {u['Year']} {u['Chamber']} {u['Geography']}: D {u['Democrat']} / R {u['Republican']} "
             f"(term winners: {u['term_winners'] or 'none found'})" for u in unmatched[:400]],
     })
-    log(f"07: {len(df)} member-races matched, {len(unmatched)} race rows unmatched, "
+    log(f"07: {len(df)} member-races matched ({len(losses)} lost races), {len(unmatched)} race rows unmatched, "
         f"{len(no_war)} current members without WAR, trajectories "
         f"{summ.war_trajectory.value_counts().to_dict()}")
     if errors:

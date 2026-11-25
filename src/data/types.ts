@@ -4,7 +4,7 @@ export type Chamber = "house" | "senate";
 
 export interface Committee { code: string; name: string; role?: string }
 /** One race: WAR from the member's side (positive = ran ahead of baseline) against a named opponent. */
-export interface WarPoint { year: number; value: number; chamber: Chamber; opponent: string; opponentParty: Party }
+export interface WarPoint { year: number; value: number; chamber: Chamber; opponent: string; opponentParty: Party; /** they lost this race */ lost?: boolean }
 
 export interface Member {
   id: string;

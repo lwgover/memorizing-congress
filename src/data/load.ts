@@ -49,6 +49,13 @@ export function seatLabel(m: Member): string {
   return m.chamber === "senate" ? `${m.state} · Class ${roman(m.senateClass!)}` : seatId(m);
 }
 
+/** What you typed when it was someone else: "James Comer (that's KY-01)", or "comer (James Comer, KY-01)". */
+export function mixupText(typed: string, other: Member): string {
+  const where = other.chamber === "senate" ? `${other.state} senator` : seatId(other);
+  const sameName = typed.trim().toLowerCase().replace(/[^a-z]/g, "") === other.name.toLowerCase().replace(/[^a-z]/g, "");
+  return sameName ? `${typed} (that's ${where})` : `${typed} (${other.name}, ${where})`;
+}
+
 export function roman(n: number): string {
   return ["", "I", "II", "III"][n] ?? String(n);
 }
